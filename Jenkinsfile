@@ -9,20 +9,20 @@ pipeline {
 
   stages {
 
-    stage ('Display versions') {
-      steps {
-        sh '''
-          ansible --version
-          molecule --version
-        '''
-      }
-    }
+//    stage ('Display versions') {
+//      steps {
+//        sh '''
+//          ansible --version
+//          molecule --version
+//        '''
+//      }
+//    }
 //    stage ('Ansible test') {
 //      steps {
 //        sh '''
 //          ansible-test sanity
-//          ansible-test units
-//          ansible-test integration -v ping
+//          ansible-test units --coverage
+//          ansible-test integration --coverage
 //        '''
 //      }
 //    }
@@ -36,6 +36,13 @@ pipeline {
         }
         stages {
           stage('Molecule Test') {
+            agent {
+              docker {
+                image 'robertdebock/github-action-molecule'
+                args '-u 0 -v /var/run/docker.sock:/var/run/docker.sock'
+                label 'molecule_test - $SCENARIO'
+              }
+            }
             when { 
               beforeAgent true
               anyOf {
@@ -46,6 +53,7 @@ pipeline {
             steps {
               sh '''
                 pip install junit_xml 
+                pip install coverage==4.5.4
                 molecule lint -s ${SCENARIO}
                 molecule destroy -s ${SCENARIO}
                 molecule converge -s ${SCENARIO} 
