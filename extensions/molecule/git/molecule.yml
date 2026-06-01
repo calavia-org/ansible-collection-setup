@@ -17,6 +17,9 @@ provisioner:
   inventory:
     group_vars:
       all:
-        git_privilege_escalation: true
+        git_skip_configure: false
+        git_privilege_escalation: false
+        git_user_name: 'Molecule Test'
+        git_user_email: 'molecule@test.local'
 verifier:
   name: ansible

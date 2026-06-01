@@ -1,10 +1,67 @@
 ---
-# This is an example playbook to execute Ansible tests.
-
-- name: 'Verify'
+- name: Verify
   hosts: all
-
+  gather_facts: true
   tasks:
-    - name: 'TEST: Example assertion'
+    - name: 'TEST: git binary exists'
+      ansible.builtin.command: which git
+      changed_when: false
+      register: git_bin
+
+    - name: 'Assert git is installed'
       ansible.builtin.assert:
-        that: true
+        that: git_bin.rc == 0
+
+    - name: 'TEST: git version'
+      ansible.builtin.command: git --version
+      changed_when: false
+      register: git_ver
+
+    - name: 'Assert git version non-empty'
+      ansible.builtin.assert:
+        that: git_ver.stdout | length > 0
+
+    - name: 'TEST: git config exists'
+      ansible.builtin.stat:
+        path: '{{ ansible_env.HOME }}/.gitconfig'
+      register: git_cfg
+
+    - name: 'Assert git config deployed'
+      ansible.builtin.assert:
+        that: git_cfg.stat.exists
+
+    - name: 'TEST: config has user.name'
+      ansible.builtin.command: git config --file {{ ansible_env.HOME }}/.gitconfig user.name
+      changed_when: false
+      register: git_cfg_name
+
+    - name: 'Assert user.name matches'
+      ansible.builtin.assert:
+        that: git_cfg_name.stdout == 'Molecule Test'
+
+    - name: 'TEST: config has user.email'
+      ansible.builtin.command: git config --file {{ ansible_env.HOME }}/.gitconfig user.email
+      changed_when: false
+      register: git_cfg_email
+
+    - name: 'Assert user.email matches'
+      ansible.builtin.assert:
+        that: git_cfg_email.stdout == 'molecule@test.local'
+
+    - name: 'TEST: config has defaultBranch'
+      ansible.builtin.command: git config --file {{ ansible_env.HOME }}/.gitconfig init.defaultBranch
+      changed_when: false
+      register: git_cfg_branch
+
+    - name: 'Assert defaultBranch is set'
+      ansible.builtin.assert:
+        that: git_cfg_branch.stdout | length > 0
+
+    - name: 'TEST: config loads without error'
+      ansible.builtin.command: git config --file {{ ansible_env.HOME }}/.gitconfig --list
+      changed_when: false
+      register: git_cfg_list
+
+    - name: 'Assert config loads cleanly'
+      ansible.builtin.assert:
+        that: git_cfg_list.rc == 0

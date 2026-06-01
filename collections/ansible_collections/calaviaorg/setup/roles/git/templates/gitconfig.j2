@@ -1,0 +1,57 @@
+# {{ ansible_managed }}
+# Git configuration managed by Ansible
+
+[user]
+{% if git_user_name | length > 0 %}
+	name = {{ git_user_name }}
+{% endif %}
+{% if git_user_email | length > 0 %}
+	email = {{ git_user_email }}
+{% endif %}
+{% if git_gpg_sign and git_gpg_key | length > 0 %}
+	signingkey = {{ git_gpg_key }}
+{% endif %}
+
+[core]
+	editor = {{ git_core_editor }}
+	excludesfile = ~/.gitignore_global
+{% if git_pager | length > 0 %}
+	pager = {{ git_pager }}
+{% endif %}
+
+[init]
+	defaultBranch = {{ git_default_branch }}
+
+[pull]
+	rebase = {{ 'true' if git_pull_rebase else 'false' }}
+
+{% if git_merge_tool | length > 0 %}
+[merge]
+	tool = {{ git_merge_tool }}
+{% endif %}
+
+{% if git_aliases | length > 0 %}
+[alias]
+{% for key, value in git_aliases.items() %}
+	{{ key }} = {{ value }}
+{% endfor %}
+{% endif %}
+
+{% if git_config_protocol_map | length > 0 %}
+{% for item in git_config_protocol_map %}
+[url "{{ item.url }}"]
+	insteadOf = {{ item.insteadOf }}
+{% endfor %}
+{% endif %}
+
+{% if git_gpg_sign %}
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true
+{% endif %}
+
+{% if git_include_config | length > 0 %}
+[include]
+	path = {{ git_include_config }}
+{% endif %}

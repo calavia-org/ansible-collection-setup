@@ -1,5 +1,4 @@
 ---
-# tasks file for git
 - name: 'Resolve platform specific vars'
   ansible.builtin.include_vars: '{{ item }}'
   with_first_found:
@@ -11,5 +10,9 @@
       paths:
         - '{{ role_path }}/vars'
 
-- name: 'Running {{ git_installer }}'
+- name: 'Install git'
   ansible.builtin.include_tasks: '{{ git_installer }}.yml'
+
+- name: 'Configure git'
+  ansible.builtin.include_tasks: configure.yml
+  when: not git_skip_configure | bool

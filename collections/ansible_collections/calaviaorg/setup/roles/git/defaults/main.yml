@@ -1,19 +1,5 @@
 ---
-# defaults file for git
 git_installer: pkg
-## system level gitconfig settings
-##
-# git_config_protocol_map:
-#   - uid: '93f2b82088e744739a4cfb8a3df68925'
-#     url: 'ssh://git@github.com'
-#     insteadOf: 'git://github.com'
-#   - uid: '0483a896-fc31-11e6-839d-001b219ca430'
-#     url: 'ssh://git@gist.github.com'
-#     insteadOf: 'git://gist.github.com'
-#   - uid: '5446806d328f42dc8be2e6d1e6139aa8'
-#     url: 'https://'
-#     insteadOf: 'git://'
-
 git_privilege_escalation: true
 git_sys_config: /etc/gitconfig
 git_usr_config: ~/.gitconfig
@@ -24,3 +10,37 @@ git_os_pkgs:
 git_lfs_enable: false
 git_lfs_os_pkgs:
   - git-lfs
+
+git_user_name: 'Jorge Calavia'
+git_user_email: '1184336+jcalavia@users.noreply.github.com'
+git_core_editor: nvim
+git_pager: ''
+git_default_branch: main
+git_pull_rebase: false
+git_merge_tool: nvimdiff
+git_merge_autosquash: true
+
+git_aliases:
+  st: status -sb
+  ci: commit
+  br: branch
+  co: checkout
+  df: diff
+  dc: diff --cached
+  lg: log --oneline --decorate --graph -20
+  amend: commit --amend --no-edit
+  undo: reset HEAD~1 --mixed
+  last: log -1 HEAD
+  unstage: reset HEAD --
+  delete: branch -d
+
+git_config_protocol_map:
+  - url: 'ssh://git@github.com'
+    insteadOf: 'git://github.com'
+  - url: 'ssh://git@gist.github.com'
+    insteadOf: 'git://gist.github.com'
+
+git_gpg_sign: false
+git_gpg_key: ''
+git_include_config: ''
+git_skip_configure: false

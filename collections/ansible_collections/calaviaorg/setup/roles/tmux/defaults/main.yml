@@ -7,7 +7,6 @@ tmux_tpm_path: '{{ ansible_env.HOME }}/.tmux/plugins/tpm'
 tmux_config: '{{ ansible_env.HOME }}/.tmux.conf'
 
 tmux_os_pkgs:
-  - git
   - tmux
 
 tmux_plugins:
