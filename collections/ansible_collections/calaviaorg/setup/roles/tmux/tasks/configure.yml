@@ -1,0 +1,7 @@
+---
+- name: 'Deploy tmux configuration'
+  ansible.builtin.template:
+    src: tmux.conf.j2
+    dest: '{{ tmux_config }}'
+    mode: '0644'
+  notify: 'Reload tmux config'

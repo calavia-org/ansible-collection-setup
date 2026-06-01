@@ -1,6 +1,8 @@
 ---
 - name: Converge
   hosts: all
+  collections:
+    - calaviaorg.setup
   tasks:
     - name: "Include setup"
       ansible.builtin.include_role:

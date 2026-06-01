@@ -1,0 +1,23 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: instance
+    image: "geerlingguy/docker-ubuntu2204-ansible:latest"
+    pre_build_image: true
+provisioner:
+  name: ansible
+  env:
+    MOLECULE_PROJECT_DIRECTORY: "extensions/molecule/tmux"
+  config_options:
+    defaults:
+      interpreter_python: auto_silent
+  inventory:
+    group_vars:
+      all:
+        tmux_privilege_escalation: true
+        tmux_tpm_enable: true
+verifier:
+  name: ansible

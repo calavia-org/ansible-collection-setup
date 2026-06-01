@@ -3,7 +3,7 @@ galaxy_info:
   description: 'Role to install tmux'
   company: 'Calavia Org'
   license: 'GPL-3.0-only'
-  min_ansible_version: '2.16'
+  min_ansible_version: '2.19'
 
   # https://galaxy.ansible.com/api/v1/platforms/
   platforms:
@@ -15,5 +15,7 @@ galaxy_info:
     - dev
     - tmux
     - sysops
+    - terminal
+    - productivity
 
 dependencies: []

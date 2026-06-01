@@ -2,7 +2,6 @@
 dependency:
   name: galaxy
   options:
-    role-file: requirements.yml
     requirements-file: requirements.yml
 platforms:
   - name: test
@@ -12,6 +11,8 @@ driver:
   name: docker
 provisioner:
   name: ansible
+  env:
+    ANSIBLE_ALLOW_BROKEN_CONDITIONALS: "true"
   config_options:
     defaults:
       callbacks_enabled: ansible.posix.profile_tasks

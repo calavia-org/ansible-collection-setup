@@ -12,3 +12,5 @@ coverage.*
 # Directories
 **/__pycache__
 tests/reports
+test/reports
+.DS_Store

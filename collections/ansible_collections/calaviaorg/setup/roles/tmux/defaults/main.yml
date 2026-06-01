@@ -1,2 +1,29 @@
 ---
-# defaults file for logrotate
+tmux_installer: pkg
+tmux_privilege_escalation: true
+tmux_tpm_enable: true
+tmux_tpm_uri: 'https://github.com/tmux-plugins/tpm.git'
+tmux_tpm_path: '{{ ansible_env.HOME }}/.tmux/plugins/tpm'
+tmux_config: '{{ ansible_env.HOME }}/.tmux.conf'
+
+tmux_os_pkgs:
+  - git
+  - tmux
+
+tmux_plugins:
+  - repo: tmux-plugins/tmux-sensible
+    tag: master
+    enabled: true
+    config: {}
+  - repo: tmux-plugins/tmux-resurrect
+    tag: master
+    enabled: true
+    config:
+      resurrect-save-last-session: 'on'
+      resurrect-save-bash-history: 'on'
+  - repo: tmux-plugins/tmux-continuum
+    tag: master
+    enabled: true
+    config:
+      continuum-save-interval: '15'
+      continuum-boot: 'on'

@@ -146,12 +146,34 @@ jobs:
           files: |
             test/reports/integration-*.xml
 
+  molecule-darwin:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install tox-ansible, includes tox
+        run: python3 -m pip install tox-ansible
+      - name: Run tox integration test (Darwin)
+        run: >-
+          MOLECULE_PROJECT_DIRECTORY="$PWD/extensions/molecule/tmux-darwin"
+          python3 -m tox
+          --ansible
+          -e integration-py3.12-2.19
+          --conf tox-ansible.ini
+          --
+          --show-capture=all
+          --junit-xml=test/reports/integration-darwin-py3.12-2.19.xml
+          -k tmux-darwin
+
   test_passed:
-    needs: [unit_test, integration_test]
+    needs: [unit_test, integration_test, molecule-darwin]
     runs-on: ubuntu-latest
     steps:
       - run: >-
           python -c "assert set([
           '${{ needs.unit_test.result }}',
-          '${{ needs.integration_test.result }}'
+          '${{ needs.integration_test.result }}',
+          '${{ needs.molecule-darwin.result }}'
           ]) == {'success'}"

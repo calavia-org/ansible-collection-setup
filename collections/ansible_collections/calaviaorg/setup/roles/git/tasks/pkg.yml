@@ -1,4 +1,12 @@
 ---
+- name: 'Update apt cache...'
+  when: ansible_pkg_mgr == 'apt'
+  become: '{{ git_privilege_escalation }}'
+  become_user: root
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
 - name: 'Install git os pkgs...'
   become: '{{ git_privilege_escalation }}'
   become_user: root
