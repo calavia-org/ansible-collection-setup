@@ -1,5 +1,6 @@
 ---
 - name: 'Update apt cache...'
+  when: ansible_pkg_mgr == 'apt'
   become: '{{ git_privilege_escalation }}'
   become_user: root
   ansible.builtin.apt:
