@@ -1,8 +1,13 @@
 ---
+- name: 'Update apt cache...'
+  ansible.builtin.apt:
+    update_cache: true
+  changed_when: true
+
 - name: 'Install git os pkgs...'
   become: '{{ git_privilege_escalation }}'
   become_user: root
-  ansible.builtin.package:
+  ansible.builtin.apt:
     name: '{{ git_os_pkgs }}'
     state: present
 
@@ -10,6 +15,6 @@
   when: git_lfs_enable
   become: '{{ git_privilege_escalation }}'
   become_user: root
-  ansible.builtin.package:
+  ansible.builtin.apt:
     name: '{{ git_lfs_os_pkgs }}'
     state: present
