@@ -1,0 +1,5 @@
+---
+- name: 'Installing tmux with homebrew'
+  homebrew:
+    name: tmux
+    state: present

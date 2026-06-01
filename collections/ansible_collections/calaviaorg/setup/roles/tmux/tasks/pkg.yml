@@ -1,0 +1,7 @@
+---
+- name: 'Install tmux os pkgs...'
+  become: '{{ tmux_privilege_escalation }}'
+  become_user: root
+  ansible.builtin.package:
+    name: '{{ tmux_os_pkgs }}'
+    state: present

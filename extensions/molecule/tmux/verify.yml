@@ -1,10 +1,46 @@
 ---
-# This is an example playbook to execute Ansible tests.
-
-- name: 'Verify'
+- name: Verify
   hosts: all
   gather_facts: false
   tasks:
-    - name: 'TEST: Example assertion'
+    - name: 'TEST: tmux binary exists'
+      ansible.builtin.command: which tmux
+      changed_when: false
+      register: tmux_bin
+
+    - name: 'Assert tmux is installed'
       ansible.builtin.assert:
-        that: true
+        that: tmux_bin.rc == 0
+        msg: 'tmux binary not found'
+
+    - name: 'TEST: tmux version'
+      ansible.builtin.command: tmux -V
+      changed_when: false
+      register: tmux_ver
+
+    - name: 'Assert tmux version non-empty'
+      ansible.builtin.assert:
+        that: tmux_ver.stdout | length > 0
+        msg: 'tmux version not retrieved'
+
+    - name: 'TEST: tmux config exists'
+      ansible.builtin.stat:
+        path: '{{ ansible_env.HOME }}/.tmux.conf'
+      register: tmux_conf
+
+    - name: 'Assert tmux config deployed'
+      ansible.builtin.assert:
+        that: tmux_conf.stat.exists
+        msg: 'tmux config not found'
+
+    - name: 'TEST: config is valid tmux syntax'
+      ansible.builtin.shell: >
+        tmux -f '{{ ansible_env.HOME }}/.tmux.conf' start-server \; list-keys \; kill-server
+      changed_when: false
+      register: tmux_keys
+      ignore_errors: true
+
+    - name: 'Assert config loads without error'
+      ansible.builtin.assert:
+        that: tmux_keys.rc == 0
+        msg: 'tmux config has syntax errors'
