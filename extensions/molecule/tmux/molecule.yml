@@ -10,8 +10,6 @@ platforms:
 provisioner:
   name: ansible
   env:
-    ANSIBLE_COLLECTIONS_PATHS: "collections:~/.ansible/collections"
-    ANSIBLE_ALLOW_BROKEN_CONDITIONALS: "true"
     MOLECULE_PROJECT_DIRECTORY: "extensions/molecule/tmux"
   config_options:
     defaults:

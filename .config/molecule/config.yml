@@ -1,6 +1,8 @@
 ---
 dependency:
   name: galaxy
+  options:
+    requirements-file: requirements.yml
 platforms:
   - name: test
     image: python:slim
@@ -9,6 +11,9 @@ driver:
   name: docker
 provisioner:
   name: ansible
+  env:
+    ANSIBLE_COLLECTIONS_PATH: collections:~/.ansible/collections
+    ANSIBLE_ALLOW_BROKEN_CONDITIONALS: "true"
   config_options:
     defaults:
       callbacks_enabled: ansible.posix.profile_tasks
