@@ -1,2 +1,8 @@
+---
 exclude_paths:
   - .tox
+  - collections/ansible_collections/calaviaorg/setup/playbooks/
+skip_list:
+  - fqcn[keyword]
+  - command-instead-of-module
+  - galaxy[no-changelog]
