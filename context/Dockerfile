@@ -1,5 +1,5 @@
-ARG ANSIBLE_RUNNER_IMAGE=quay.io/ansible/ansible-runner:devel
-ARG PYTHON_BUILDER_IMAGE=quay.io/ansible/python-builder:latest
+ARG ANSIBLE_RUNNER_IMAGE=quay.io/ansible/ansible-runner:stable-2.12-latest
+ARG PYTHON_BUILDER_IMAGE=quay.io/ansible/python-builder:1-12
 
 FROM $ANSIBLE_RUNNER_IMAGE as galaxy
 
