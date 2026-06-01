@@ -12,7 +12,6 @@ driver:
 provisioner:
   name: ansible
   env:
-    ANSIBLE_COLLECTIONS_PATH: collections:~/.ansible/collections
     ANSIBLE_ALLOW_BROKEN_CONDITIONALS: "true"
   config_options:
     defaults:

@@ -17,5 +17,7 @@
     {{ tmux_tpm_path }}/bin/install_plugins
   args:
     chdir: '{{ tmux_plugins_dir }}'
+  environment:
+    TMUX_PLUGIN_MANAGER_PATH: '{{ tmux_plugins_dir }}/'
   changed_when: false
   when: tmux_tpm_enable

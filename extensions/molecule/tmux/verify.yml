@@ -44,3 +44,21 @@
       ansible.builtin.assert:
         that: tmux_keys.rc == 0
         msg: 'tmux config has syntax errors'
+
+    - name: 'TEST: TPM plugin directories exist'
+      ansible.builtin.stat:
+        path: '{{ ansible_env.HOME }}/.tmux/plugins/{{ item }}'
+      loop:
+        - tpm
+        - tmux-sensible
+        - tmux-resurrect
+        - tmux-continuum
+      register: tpm_plugins
+      when: tmux_tpm_enable
+
+    - name: 'Assert all enabled plugins were cloned by TPM'
+      ansible.builtin.assert:
+        that: item.stat.exists
+        msg: 'TPM plugin {{ item.item }} not found at {{ item.stat.path }}'
+      loop: '{{ tpm_plugins.results }}'
+      when: tmux_tpm_enable

@@ -1,1 +1,19 @@
-../tmux/converge.yml
+---
+- name: Converge
+  hosts: all
+  collections:
+    - calaviaorg.setup
+  tasks:
+    - name: Check if running in CI
+      ansible.builtin.set_fact:
+        _ci_run: "{{ lookup('ansible.builtin.env', 'GITHUB_ACTIONS') | default('false', true) | bool }}"
+
+    - name: Skip when not in CI (would overwrite local install)
+      ansible.builtin.debug:
+        msg: "Not in CI — skipping tmux role converge to protect local config"
+      when: not _ci_run
+
+    - name: "Include setup"
+      ansible.builtin.include_role:
+        name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
+      when: _ci_run

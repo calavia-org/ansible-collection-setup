@@ -1,38 +1,87 @@
-Role Name
-=========
+# tmux
 
-A brief description of the role goes here.
+Install and configure tmux with TPM plugin management.
 
-Requirements
-------------
+## Requirements
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Ansible 2.19+
+- `pkg` or `brew` package manager (platform-dependent)
+- `git` (required for TPM plugin cloning)
 
-Role Variables
---------------
+## Role Variables
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+### Installation
 
-Dependencies
-------------
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `tmux_installer` | `pkg` | Package manager to use: `pkg` or `brew` |
+| `tmux_privilege_escalation` | `true` | Use `become` for package installation |
+| `tmux_os_pkgs` | `[git, tmux]` | OS packages to install (git added for TPM) |
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+### TPM and Plugins
 
-Example Playbook
-----------------
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `tmux_tpm_enable` | `true` | Enable TPM plugin management |
+| `tmux_tpm_uri` | `https://github.com/tmux-plugins/tpm.git` | TPM repository URL |
+| `tmux_tpm_path` | `~/.tmux/plugins/tpm` | TPM installation path |
+| `tmux_plugins` | (see below) | List of plugins to manage |
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+### Configuration
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `tmux_config` | `~/.tmux.conf` | Path to tmux configuration file |
 
-License
--------
+### Default plugins
 
-BSD
+```yaml
+tmux_plugins:
+  - repo: tmux-plugins/tmux-sensible
+    tag: master
+    enabled: true
+  - repo: tmux-plugins/tmux-resurrect
+    tag: master
+    enabled: true
+    config:
+      resurrect-save-last-session: 'on'
+      resurrect-save-bash-history: 'on'
+  - repo: tmux-plugins/tmux-continuum
+    tag: master
+    enabled: true
+    config:
+      continuum-save-interval: '15'
+      continuum-boot: 'on'
+```
 
-Author Information
-------------------
+## Dependencies
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+None.
+
+## Example Playbook
+
+```yaml
+- hosts: all
+  collections:
+    - calaviaorg.setup
+  roles:
+    - role: tmux
+      tmux_tpm_enable: true
+      tmux_plugins:
+        - repo: tmux-plugins/tmux-sensible
+          tag: master
+          enabled: true
+```
+
+## Platform Support
+
+- Ubuntu (focal+)
+- macOS (Darwin) — uses `brew` installer
+
+## License
+
+GPL-2.0-or-later
+
+## Author
+
+Jorge Calavia <jorge@calavia.org>

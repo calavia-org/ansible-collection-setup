@@ -1,1 +1,63 @@
-../tmux/verify.yml
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Check if running in CI
+      ansible.builtin.set_fact:
+        _ci_run: "{{ lookup('ansible.builtin.env', 'GITHUB_ACTIONS') | default('false', true) | bool }}"
+
+    - name: Skip when not in CI
+      ansible.builtin.debug:
+        msg: "Not in CI — skipping verify (no converge was run)"
+      when: not _ci_run
+
+    - name: 'TEST: tmux binary exists'
+      ansible.builtin.command: which tmux
+      changed_when: false
+      register: tmux_bin
+      when: _ci_run
+
+    - name: 'Assert tmux is installed'
+      ansible.builtin.assert:
+        that: tmux_bin.rc == 0
+        msg: 'tmux binary not found'
+      when: _ci_run
+
+    - name: 'TEST: tmux version'
+      ansible.builtin.command: tmux -V
+      changed_when: false
+      register: tmux_ver
+      when: _ci_run
+
+    - name: 'Assert tmux version non-empty'
+      ansible.builtin.assert:
+        that: tmux_ver.stdout | length > 0
+        msg: 'tmux version not retrieved'
+      when: _ci_run
+
+    - name: 'TEST: tmux config exists'
+      ansible.builtin.stat:
+        path: '{{ ansible_env.HOME }}/.tmux.conf'
+      register: tmux_conf
+      when: _ci_run
+
+    - name: 'Assert tmux config deployed'
+      ansible.builtin.assert:
+        that: tmux_conf.stat.exists
+        msg: 'tmux config not found'
+      when: _ci_run
+
+    - name: 'TEST: config is valid tmux syntax'
+      ansible.builtin.shell: >
+        tmux -f '{{ ansible_env.HOME }}/.tmux.conf' start-server \; list-keys \; kill-server
+      changed_when: false
+      register: tmux_keys
+      ignore_errors: true
+      when: _ci_run
+
+    - name: 'Assert config loads without error'
+      ansible.builtin.assert:
+        that: tmux_keys.rc == 0
+        msg: 'tmux config has syntax errors'
+      when: _ci_run

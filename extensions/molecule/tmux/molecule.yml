@@ -18,6 +18,6 @@ provisioner:
     group_vars:
       all:
         tmux_privilege_escalation: true
-        tmux_tpm_enable: false
+        tmux_tpm_enable: true
 verifier:
   name: ansible
