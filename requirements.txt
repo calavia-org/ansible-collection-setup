@@ -1,8 +1,5 @@
-ansible-core>=2.19.0
 ansible-lint>=24.2.0
-molecule>=6.0.0
+molecule>=26.4.0
 molecule-docker>=2.1.0
 pre-commit>=3.0.0
-pytest-cov>=4.0.0
-docker>=7.0.0
-tox-ansible>=24.2.0
+pytest-cov>=7.1.0
