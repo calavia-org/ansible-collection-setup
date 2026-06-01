@@ -1,0 +1,18 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: delegated
+platforms:
+  - name: darwin-instance
+provisioner:
+  name: ansible
+  env:
+    MOLECULE_PROJECT_DIRECTORY: "extensions/molecule/tmux-darwin"
+  inventory:
+    group_vars:
+      all:
+        ansible_connection: local
+        tmux_tpm_enable: false
+verifier:
+  name: ansible
