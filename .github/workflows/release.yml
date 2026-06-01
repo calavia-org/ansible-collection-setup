@@ -2,7 +2,7 @@ name: Release Collection
 
 on:
   push:
-    branches: 
+    branches:
       - main
       - release-*
 
@@ -46,7 +46,7 @@ jobs:
           --junit-xml=tests/reports/unit.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+
       - name: Run integration test
         run: >-
           python3 -m tox
@@ -62,4 +62,4 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}          
+          token: ${{ secrets.CODECOV_TOKEN }}
