@@ -1,0 +1,44 @@
+---
+- name: 'Create nvim config directories'
+  ansible.builtin.file:
+    path: '{{ nvim_config_dir }}/{{ item }}'
+    state: directory
+    mode: '0755'
+  loop:
+    - lua/config
+    - lua/plugins
+
+- name: 'Deploy init.lua'
+  ansible.builtin.template:
+    src: init.lua.j2
+    dest: '{{ nvim_config_dir }}/init.lua'
+    mode: '0644'
+
+- name: 'Deploy core config files'
+  ansible.builtin.template:
+    src: 'lua/config/{{ item }}.j2'
+    dest: '{{ nvim_config_dir }}/lua/config/{{ item }}'
+    mode: '0644'
+  loop:
+    - options.lua
+    - keymaps.lua
+    - autocmds.lua
+    - lazy.lua
+
+- name: 'Deploy plugin files'
+  ansible.builtin.template:
+    src: 'lua/plugins/{{ item }}.j2'
+    dest: '{{ nvim_config_dir }}/lua/plugins/{{ item.file }}'
+    mode: '0644'
+  loop:
+    - { file: cmp.lua, toggle: nvim_plugin_cmp }
+    - { file: lsp.lua, toggle: nvim_plugin_lsp }
+    - { file: tools.lua, toggle: nvim_plugin_tools }
+    - { file: ui.lua, toggle: nvim_plugin_ui }
+  when: vars[item.toggle]
+
+- name: 'Deploy lazy-lock.json'
+  ansible.builtin.copy:
+    src: lazy-lock.json
+    dest: '{{ nvim_config_dir }}/lazy-lock.json'
+    mode: '0644'

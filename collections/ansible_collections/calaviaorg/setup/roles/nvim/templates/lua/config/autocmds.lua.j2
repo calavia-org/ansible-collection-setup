@@ -1,0 +1,8 @@
+-- {{ ansible_managed }}
+-- Neovim autocmds managed by Ansible
+
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    vim.cmd("Neotree show left")
+  end
+})

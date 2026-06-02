@@ -1,0 +1,5 @@
+---
+- name: 'Installing neovim with homebrew'
+  community.general.homebrew:
+    name: neovim
+    state: present

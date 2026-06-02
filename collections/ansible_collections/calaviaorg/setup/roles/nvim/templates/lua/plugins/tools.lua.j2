@@ -1,0 +1,46 @@
+-- {{ ansible_managed }}
+-- Tools plugins managed by Ansible
+
+return {
+
+{% if nvim_plugin_telescope %}
+{
+  "nvim-telescope/telescope.nvim",
+  dependencies = { "nvim-lua/plenary.nvim" },
+},
+{% endif %}
+
+{% if nvim_plugin_treesitter %}
+{
+  "nvim-treesitter/nvim-treesitter",
+  build = ":TSUpdate",
+  event = { "BufReadPost", "BufNewFile" },
+  config = function()
+    local ok, configs = pcall(require, "nvim-treesitter.configs")
+    if not ok then
+      return
+    end
+
+    configs.setup({
+      ensure_installed = {
+{% for lang in nvim_treesitter_languages %}
+        "{{ lang }}",
+{% endfor %}
+      },
+      highlight = { enable = true },
+      indent = { enable = true },
+    })
+  end,
+},
+{% endif %}
+
+{% if nvim_plugin_gitsigns %}
+{
+  "lewis6991/gitsigns.nvim",
+  config = function()
+    require("gitsigns").setup()
+  end
+},
+{% endif %}
+
+}

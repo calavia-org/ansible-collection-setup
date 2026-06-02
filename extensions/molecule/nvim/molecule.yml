@@ -10,12 +10,13 @@ platforms:
 provisioner:
   name: ansible
   env:
-    MOLECULE_PROJECT_DIRECTORY: "extensions/molecule/vim"
+    MOLECULE_PROJECT_DIRECTORY: "extensions/molecule/nvim"
   config_options:
     defaults:
       interpreter_python: auto_silent
   inventory:
     group_vars:
-      all: {}
+      all:
+        nvim_skip_configure: true
 verifier:
   name: ansible

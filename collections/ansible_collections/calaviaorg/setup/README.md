@@ -9,7 +9,7 @@ Ansible collection for setting up local development environments.
 | [tmux](./roles/tmux/README.md) | Install and configure tmux with TPM plugin management |
 | [git](./roles/git/README.md) | Install and configure git with LFS support |
 | [gpg](./roles/gpg/README.md) | Install and manage GPG keys, agent, and SSH integration |
-| [vim](./roles/vim/README.md) | Install and configure vim |
+| [nvim](./roles/nvim/README.md) | Install and configure Neovim with lazy.nvim plugin management |
 
 ## Requirements
 
@@ -39,7 +39,7 @@ collections:
   roles:
     - role: tmux
     - role: git
-    - role: vim
+    - role: nvim
 ```
 
 ## License
