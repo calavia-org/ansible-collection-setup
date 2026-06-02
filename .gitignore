@@ -15,3 +15,5 @@ tests/reports
 test/reports
 .DS_Store
 .ansible/
+.vscode/
+.devcontainer/
