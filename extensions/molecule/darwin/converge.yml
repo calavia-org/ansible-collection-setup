@@ -1,0 +1,21 @@
+---
+- name: Converge
+  hosts: all
+  collections:
+    - calaviaorg.setup
+  tasks:
+    - name: 'Include git'
+      ansible.builtin.include_role:
+        name: git
+
+    - name: 'Include gpg'
+      ansible.builtin.include_role:
+        name: gpg
+
+    - name: 'Include nvim'
+      ansible.builtin.include_role:
+        name: nvim
+
+    - name: 'Include tmux'
+      ansible.builtin.include_role:
+        name: tmux

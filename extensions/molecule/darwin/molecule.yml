@@ -7,12 +7,13 @@ platforms:
   - name: darwin-instance
 provisioner:
   name: ansible
-  env:
-    MOLECULE_PROJECT_DIRECTORY: "extensions/molecule/tmux-darwin"
   inventory:
     group_vars:
       all:
         ansible_connection: local
+        git_skip_configure: true
+        gpg_skip_configure: true
+        nvim_skip_configure: true
         tmux_tpm_enable: false
 verifier:
   name: ansible
