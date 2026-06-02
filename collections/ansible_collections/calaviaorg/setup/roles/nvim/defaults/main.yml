@@ -1,0 +1,50 @@
+---
+nvim_installer: pkg
+nvim_privilege_escalation: true
+nvim_os_pkgs:
+  - neovim
+nvim_config_dir: '{{ ansible_env.HOME }}/.config/nvim'
+
+nvim_leader: " "
+nvim_line_numbers: true
+nvim_relative_numbers: true
+nvim_cursorline: true
+nvim_wrap: false
+nvim_tab_width: 2
+nvim_shift_width: 2
+nvim_clipboard: unnamedplus
+
+nvim_plugin_cmp: true
+nvim_plugin_lsp: true
+nvim_plugin_tools: true
+nvim_plugin_ui: true
+nvim_plugin_telescope: true
+nvim_plugin_treesitter: true
+nvim_plugin_gitsigns: true
+nvim_plugin_tokyonight: true
+nvim_plugin_lualine: true
+nvim_plugin_which_key: true
+nvim_plugin_neotree: true
+
+nvim_lsp_servers:
+  - lua_ls
+  - ts_ls
+  - pyright
+  - gopls
+  - rust_analyzer
+  - bashls
+
+nvim_treesitter_languages:
+  - lua
+  - vim
+  - bash
+  - javascript
+  - typescript
+  - json
+  - yaml
+  - python
+  - go
+  - rust
+  - markdown
+
+nvim_skip_configure: false

@@ -1,0 +1,49 @@
+-- {{ ansible_managed }}
+-- UI plugins managed by Ansible
+
+return {
+
+{% if nvim_plugin_tokyonight %}
+{
+  "folke/tokyonight.nvim",
+  priority = 1000,
+  config = function()
+    vim.cmd.colorscheme("tokyonight-night")
+  end
+},
+{% endif %}
+
+{% if nvim_plugin_lualine %}
+{
+  "nvim-lualine/lualine.nvim",
+  config = function()
+    require("lualine").setup()
+  end
+},
+{% endif %}
+
+{% if nvim_plugin_which_key %}
+{
+  "folke/which-key.nvim",
+  config = function()
+    require("which-key").setup()
+  end
+},
+{% endif %}
+
+{% if nvim_plugin_neotree %}
+{
+  "nvim-neo-tree/neo-tree.nvim",
+  branch = "v3.x",
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    "MunifTanjim/nui.nvim",
+    "nvim-tree/nvim-web-devicons",
+  },
+  config = function()
+    require("neo-tree").setup({})
+  end
+},
+{% endif %}
+
+}

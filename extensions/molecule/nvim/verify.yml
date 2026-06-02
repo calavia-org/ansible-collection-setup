@@ -1,0 +1,22 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: 'TEST: nvim binary exists'
+      ansible.builtin.command: which nvim
+      changed_when: false
+      register: nvim_bin
+
+    - name: 'Assert nvim is installed'
+      ansible.builtin.assert:
+        that: nvim_bin.rc == 0
+
+    - name: 'TEST: nvim version'
+      ansible.builtin.command: nvim --version
+      changed_when: false
+      register: nvim_ver
+
+    - name: 'Assert nvim version non-empty'
+      ansible.builtin.assert:
+        that: nvim_ver.stdout | length > 0

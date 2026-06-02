@@ -1,0 +1,32 @@
+-- {{ ansible_managed }}
+-- LSP plugins managed by Ansible
+{% if nvim_plugin_lsp %}
+
+return {
+
+{
+  "williamboman/mason.nvim",
+  config = function()
+    require("mason").setup()
+  end
+},
+
+{
+  "neovim/nvim-lspconfig",
+  config = function()
+
+    local servers = {
+{% for server in nvim_lsp_servers %}
+      "{{ server }}",
+{% endfor %}
+    }
+
+    for _, server in ipairs(servers) do
+      vim.lsp.config(server, {})
+      vim.lsp.enable(server)
+    end
+  end
+},
+
+}
+{% endif %}

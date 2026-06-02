@@ -1,0 +1,28 @@
+-- {{ ansible_managed }}
+-- Neovim options managed by Ansible
+
+vim.g.mapleader = "{{ nvim_leader }}"
+
+local opt = vim.opt
+
+opt.number = {{ 'true' if nvim_line_numbers else 'false' }}
+opt.relativenumber = {{ 'true' if nvim_relative_numbers else 'false' }}
+opt.cursorline = {{ 'true' if nvim_cursorline else 'false' }}
+opt.wrap = {{ 'true' if nvim_wrap else 'false' }}
+opt.termguicolors = true
+opt.signcolumn = "yes"
+opt.clipboard = "{{ nvim_clipboard }}"
+
+opt.expandtab = true
+opt.shiftwidth = {{ nvim_shift_width }}
+opt.tabstop = {{ nvim_tab_width }}
+opt.smartindent = true
+
+opt.splitright = true
+opt.splitbelow = true
+
+opt.ignorecase = true
+opt.smartcase = true
+
+opt.updatetime = 200
+opt.timeoutlen = 300
