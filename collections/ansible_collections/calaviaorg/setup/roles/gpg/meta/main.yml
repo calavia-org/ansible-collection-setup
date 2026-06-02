@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  author: 'Jorge Calavia'
+  description: 'Role to install and manage GPG keys and agent'
+  company: 'Calavia Org'
+  license: 'GPL-3.0-only'
+  min_ansible_version: '2.19'
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+  galaxy_tags:
+    - dev
+    - gpg
+    - security
+    - signing
+dependencies: []

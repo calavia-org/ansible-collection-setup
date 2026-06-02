@@ -1,0 +1,20 @@
+---
+- name: 'Ensure ~/.gnupg directory exists'
+  ansible.builtin.file:
+    path: '{{ ansible_env.HOME }}/.gnupg'
+    state: directory
+    mode: '0700'
+
+- name: 'Deploy gpg-agent.conf'
+  ansible.builtin.template:
+    src: gpg-agent.conf.j2
+    dest: '{{ gpg_agent_config }}'
+    mode: '0600'
+  notify: 'Reload gpg-agent'
+
+- name: 'Deploy sshcontrol'
+  ansible.builtin.template:
+    src: sshcontrol.j2
+    dest: '{{ ansible_env.HOME }}/.gnupg/sshcontrol'
+    mode: '0600'
+  when: gpg_agent_ssh_support and gpg_ssh_control_keys | length > 0

@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+# GPG agent configuration managed by Ansible
+
+default-cache-ttl {{ gpg_agent_cache_ttl }}
+max-cache-ttl {{ gpg_agent_cache_ttl * 2 }}
+{% if gpg_agent_pinentry | length > 0 %}
+pinentry-program {{ gpg_agent_pinentry }}
+{% endif %}
+{% if gpg_agent_ssh_support %}
+enable-ssh-support
+{% endif %}

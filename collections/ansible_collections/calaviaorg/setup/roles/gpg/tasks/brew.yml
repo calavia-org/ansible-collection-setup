@@ -1,0 +1,5 @@
+---
+- name: 'Installing GPG with homebrew'
+  community.general.homebrew:
+    name: '{{ gpg_os_pkgs }}'
+    state: present

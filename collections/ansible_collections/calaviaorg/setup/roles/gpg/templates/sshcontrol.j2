@@ -1,0 +1,4 @@
+# {{ ansible_managed }}
+{% for keygrip in gpg_ssh_control_keys %}
+{{ keygrip }}
+{% endfor %}

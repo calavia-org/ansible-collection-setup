@@ -1,0 +1,43 @@
+---
+- name: 'Assert required key vars'
+  ansible.builtin.assert:
+    that:
+      - gpg_key_real_name | length > 0
+      - gpg_key_email | length > 0
+    fail_msg: >-
+      gpg_key_real_name and gpg_key_email are required for key generation.
+      Set them in your playbook, or they will default to git_user_name/git_user_email.
+
+- name: 'Import GPG key from file'
+  ansible.builtin.command: >
+    gpg --batch --import {{ gpg_key_import_file }}
+  changed_when: false
+  when: gpg_key_import_file | length > 0
+
+- name: 'Generate GPG key (batch mode)'
+  ansible.builtin.shell: |
+    cat > /tmp/gpg-key-batch <<'BATCH_EOF'
+    Key-Type: {{ gpg_key_type }}
+    Key-Length: {{ gpg_key_length }}
+    Key-Usage: sign,auth
+    Subkey-Type: {{ gpg_key_type }}
+    Subkey-Length: {{ gpg_key_length }}
+    Subkey-Usage: encrypt,sign,auth
+    Name-Real: {{ gpg_key_real_name }}
+    Name-Email: {{ gpg_key_email }}
+    Expire-Date: 0
+    %no-protection
+    %transient-key
+    %commit
+    BATCH_EOF
+    gpg --batch --generate-key /tmp/gpg-key-batch
+  args:
+    creates: '{{ ansible_env.HOME }}/.gnupg/openpgp-revocs.d/'
+  when: gpg_key_import_file | length == 0
+
+- name: 'Export public key'
+  ansible.builtin.shell: >
+    gpg --armor --export {{ gpg_key_email }} > {{ gpg_key_export_path }}
+  args:
+    creates: '{{ gpg_key_export_path }}'
+  when: gpg_key_export_public

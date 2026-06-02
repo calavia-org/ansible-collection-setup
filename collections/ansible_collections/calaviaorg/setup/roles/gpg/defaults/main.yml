@@ -1,0 +1,24 @@
+---
+gpg_installer: pkg
+gpg_privilege_escalation: true
+gpg_os_pkgs:
+  - gnupg
+  - pinentry-tty
+
+gpg_agent_config: '{{ ansible_env.HOME }}/.gnupg/gpg-agent.conf'
+gpg_agent_ssh_support: true
+gpg_agent_cache_ttl: 600
+gpg_agent_pinentry: ''
+
+gpg_key_manage: false
+gpg_key_type: RSA
+gpg_key_length: '4096'
+gpg_key_real_name: '{{ git_user_name | default("") }}'
+gpg_key_email: '{{ git_user_email | default("") }}'
+gpg_key_passphrase: ''
+gpg_key_import_file: ''
+gpg_key_export_public: false
+gpg_key_export_path: '{{ ansible_env.HOME }}/.gnupg/public.key'
+
+gpg_ssh_control_keys: []
+gpg_skip_configure: false

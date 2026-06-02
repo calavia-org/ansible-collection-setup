@@ -16,4 +16,7 @@ galaxy_info:
     - tmux
     - sysops
 
-dependencies: []
+dependencies:
+  - role: gpg
+    gpg_skip_configure: true
+    gpg_key_manage: false

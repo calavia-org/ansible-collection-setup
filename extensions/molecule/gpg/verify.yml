@@ -1,0 +1,62 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: 'TEST: gpg binary exists'
+      ansible.builtin.command: which gpg
+      changed_when: false
+      register: gpg_bin
+
+    - name: 'Assert gpg is installed'
+      ansible.builtin.assert:
+        that: gpg_bin.rc == 0
+
+    - name: 'TEST: gpg version'
+      ansible.builtin.command: gpg --version
+      changed_when: false
+      register: gpg_ver
+
+    - name: 'Assert gpg version non-empty'
+      ansible.builtin.assert:
+        that: gpg_ver.stdout | length > 0
+
+    - name: 'TEST: gpg-agent config exists'
+      ansible.builtin.stat:
+        path: '{{ ansible_env.HOME }}/.gnupg/gpg-agent.conf'
+      register: gpg_agent_cfg
+
+    - name: 'Assert gpg-agent config deployed'
+      ansible.builtin.assert:
+        that: gpg_agent_cfg.stat.exists
+
+    - name: 'TEST: gpg secret key exists for Molecule Test'
+      ansible.builtin.command: >
+        gpg --list-secret-keys --keyid-format LONG molecule@gpg.test
+      changed_when: false
+      register: gpg_key_list
+      failed_when: false
+
+    - name: 'Assert secret key exists'
+      ansible.builtin.assert:
+        that: gpg_key_list.rc == 0
+        msg: 'GPG secret key for molecule@gpg.test not found'
+
+    - name: 'TEST: public key exported'
+      ansible.builtin.stat:
+        path: '{{ ansible_env.HOME }}/.gnupg/public.key'
+      register: gpg_pub_key
+
+    - name: 'Assert public key exported'
+      ansible.builtin.assert:
+        that: gpg_pub_key.stat.exists
+
+    - name: 'TEST: public key contains test email'
+      ansible.builtin.command: >
+        gpg --list-keys --keyid-format LONG molecule@gpg.test
+      changed_when: false
+      register: gpg_pub_list
+
+    - name: 'Assert public key has correct user'
+      ansible.builtin.assert:
+        that: gpg_pub_list.stdout is search('Molecule Test')

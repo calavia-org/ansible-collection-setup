@@ -1,0 +1,26 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: instance
+    image: "geerlingguy/docker-ubuntu2204-ansible:latest"
+    pre_build_image: true
+provisioner:
+  name: ansible
+  env:
+    MOLECULE_PROJECT_DIRECTORY: "extensions/molecule/gpg"
+  config_options:
+    defaults:
+      interpreter_python: auto_silent
+  inventory:
+    group_vars:
+      all:
+        gpg_skip_configure: false
+        gpg_key_manage: true
+        gpg_key_real_name: 'Molecule Test'
+        gpg_key_email: 'molecule@gpg.test'
+        gpg_key_export_public: true
+verifier:
+  name: ansible

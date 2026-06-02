@@ -1,0 +1,6 @@
+---
+gpg_privilege_escalation: false
+gpg_os_pkgs:
+  - gnupg
+  - pinentry-mac
+gpg_agent_pinentry: /opt/homebrew/bin/pinentry-mac
