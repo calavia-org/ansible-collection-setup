@@ -5,6 +5,8 @@ platforms:
   - name: darwin-instance
 provisioner:
   name: ansible
+  env:
+    ANSIBLE_COLLECTIONS_PATH: collections:~/.ansible/collections
   inventory:
     group_vars:
       all:
