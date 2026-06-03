@@ -1,0 +1,14 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+{% for plugin in opencode_plugins %}
+{% if plugin.mcp is defined %}
+    "{{ plugin.name }}": {
+      "command": {{ plugin.mcp.command | tojson }},
+      "enabled": {{ plugin.mcp.enabled | lower }},
+      "type": "{{ plugin.mcp.type }}"
+    }{{ "," if not loop.last }}
+{% endif %}
+{% endfor %}
+  }
+}

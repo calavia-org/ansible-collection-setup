@@ -1,0 +1,20 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+driver:
+  name: default
+platforms:
+  - name: instance
+provisioner:
+  name: ansible
+  env:
+    MOLECULE_PROJECT_DIRECTORY: "extensions/molecule/opencode"
+  inventory:
+    group_vars:
+      all:
+        ansible_connection: local
+        opencode_skip_configure: true
+verifier:
+  name: ansible

@@ -1,0 +1,25 @@
+---
+opencode_installer: pkg
+opencode_privilege_escalation: true
+opencode_os_pkgs:
+  - opencode
+
+opencode_plugins:
+  - name: engram
+    dependencies:
+      - installer: package
+        name: engram
+      - installer: npm
+        name: "@opencode-ai/plugin"
+    files:
+      - engram.ts
+    mcp:
+      command: ["engram", "mcp", "--tools=agent"]
+      enabled: true
+      type: local
+
+opencode_plugin_roles: []
+opencode_pkg_overrides: {}
+
+opencode_config_dir: '{{ ansible_env.HOME }}/.config/opencode'
+opencode_skip_configure: false

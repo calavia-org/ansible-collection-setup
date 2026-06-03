@@ -1,0 +1,41 @@
+---
+- name: 'Flatten all plugin dependencies'
+  ansible.builtin.set_fact:
+    _opencode_all_deps: "{{ opencode_plugins | map(attribute='dependencies') | flatten }}"
+
+- name: 'Install package dependencies'
+  ansible.builtin.package:
+    name: "{{ opencode_pkg_overrides.get(dep.name, dep.name) }}"
+    state: present
+  become: '{{ opencode_privilege_escalation }}'
+  become_user: root
+  loop: "{{ _opencode_all_deps }}"
+  loop_control:
+    loop_var: dep
+  when: dep.installer == 'package'
+
+- name: 'Ensure config dir exists for npm installs'
+  ansible.builtin.file:
+    path: '{{ opencode_config_dir }}'
+    state: directory
+    mode: '0755'
+  when: _opencode_all_deps | selectattr('installer', '==', 'npm') | list | length > 0
+
+- name: 'Install npm dependencies'
+  community.general.npm:
+    name: "{{ dep.name }}"
+    path: '{{ opencode_config_dir }}'
+    state: present
+  loop: "{{ _opencode_all_deps }}"
+  loop_control:
+    loop_var: dep
+  when: dep.installer == 'npm'
+
+- name: 'Install pip dependencies'
+  ansible.builtin.pip:
+    name: "{{ dep.name }}"
+    state: present
+  loop: "{{ _opencode_all_deps }}"
+  loop_control:
+    loop_var: dep
+  when: dep.installer == 'pip'
