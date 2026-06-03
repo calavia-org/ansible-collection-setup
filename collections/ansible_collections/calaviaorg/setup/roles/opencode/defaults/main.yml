@@ -1,5 +1,6 @@
 ---
 opencode_installer: binary
+opencode_version: ''
 opencode_privilege_escalation: true
 opencode_os_pkgs:
   - opencode
