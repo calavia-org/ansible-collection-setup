@@ -155,6 +155,8 @@ jobs:
           python-version: "3.12"
       - name: Install tox-ansible, includes tox
         run: python3 -m pip install tox-ansible
+      - name: Install community.general
+        run: ansible-galaxy collection install community.general -p $PWD/collections
       - name: Run tox integration test (Darwin)
         run: >-
           python3 -m tox
