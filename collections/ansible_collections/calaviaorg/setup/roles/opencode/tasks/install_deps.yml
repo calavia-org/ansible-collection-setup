@@ -22,10 +22,10 @@
   when: _opencode_all_deps | selectattr('installer', '==', 'npm') | list | length > 0
 
 - name: 'Install npm dependencies'
-  community.general.npm:
-    name: "{{ dep.name }}"
-    path: '{{ opencode_config_dir }}'
-    state: present
+  ansible.builtin.command:
+    cmd: npm install {{ dep.name }}
+    chdir: '{{ opencode_config_dir }}'
+    creates: '{{ opencode_config_dir }}/node_modules/{{ dep.name }}'
   loop: "{{ _opencode_all_deps }}"
   loop_control:
     loop_var: dep
