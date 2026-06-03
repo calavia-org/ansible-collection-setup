@@ -1,0 +1,49 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: 'TEST: git binary exists'
+      ansible.builtin.command: which git
+      changed_when: false
+      register: git_bin
+
+    - name: 'Assert git is installed'
+      ansible.builtin.assert:
+        that: git_bin.rc == 0
+
+    - name: 'TEST: git version'
+      ansible.builtin.command: git --version
+      changed_when: false
+      register: git_ver
+
+    - name: 'Assert git version non-empty'
+      ansible.builtin.assert:
+        that: git_ver.stdout | length > 0
+
+    - name: 'TEST: gpg binary exists'
+      ansible.builtin.command: which gpg
+      changed_when: false
+      register: gpg_bin
+
+    - name: 'Assert gpg is installed'
+      ansible.builtin.assert:
+        that: gpg_bin.rc == 0
+
+    - name: 'TEST: nvim binary exists'
+      ansible.builtin.command: which nvim
+      changed_when: false
+      register: nvim_bin
+
+    - name: 'Assert nvim is installed'
+      ansible.builtin.assert:
+        that: nvim_bin.rc == 0
+
+    - name: 'TEST: tmux binary exists'
+      ansible.builtin.command: which tmux
+      changed_when: false
+      register: tmux_bin
+
+    - name: 'Assert tmux is installed'
+      ansible.builtin.assert:
+        that: tmux_bin.rc == 0
