@@ -19,3 +19,11 @@
     - name: 'Include tmux'
       ansible.builtin.include_role:
         name: tmux
+
+    - name: 'Include opencode'
+      ansible.builtin.include_role:
+        name: opencode
+
+    - name: 'Include mise'
+      ansible.builtin.include_role:
+        name: mise

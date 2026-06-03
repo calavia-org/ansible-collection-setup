@@ -17,5 +17,7 @@ provisioner:
         gpg_skip_configure: true
         nvim_skip_configure: true
         tmux_tpm_enable: false
+        opencode_skip_configure: true
+        mise_skip_configure: true
 verifier:
   name: ansible
