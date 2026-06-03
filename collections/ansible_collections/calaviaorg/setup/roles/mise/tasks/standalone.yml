@@ -18,6 +18,7 @@
   ansible.builtin.shell:
     cmd: 'set -o pipefail && curl -fsSL https://mise.run | sh'
     creates: '{{ ansible_facts.env.HOME }}/.local/bin/mise'
+    executable: /bin/bash
 
 - name: 'Ensure ~/.local/bin is in PATH'
   ansible.builtin.lineinfile:
