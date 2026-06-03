@@ -14,85 +14,53 @@ Install and configure [OpenCode](https://opencode.ai) with plugin support.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `opencode_installer` | `pkg` | Package manager: `pkg` or `brew` |
+| `opencode_installer` | `binary` | Installation method: `binary`, `pkg`, or `brew` |
+| `opencode_version` | `''` | Specific version to install (binary installer only) |
 | `opencode_privilege_escalation` | `true` | Use `become` for package installation |
 | `opencode_os_pkgs` | `[opencode]` | OS packages to install |
 
 ### Plugins
 
+Each plugin has an explicit enable toggle. When enabled, the role runs a dedicated task file that follows the upstream install instructions.
+
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `opencode_plugins` | (see below) | List of plugin definitions |
-| `opencode_plugin_roles` | `[]` | Role dependencies per plugin |
-| `opencode_pkg_overrides` | `{}` | Platform-specific package name overrides |
+| `opencode_engram_enable` | `true` | Enable the Engram memory plugin |
+| `opencode_opentmux_enable` | `false` | Enable the OpenTmux tmux integration plugin |
+
+### Engram Configuration
+
+When `opencode_engram_enable` is `true`:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `opencode_engram_mcp_command` | `["engram", "mcp", "--tools=agent"]` | MCP server command |
+| `opencode_engram_mcp_enabled` | `true` | MCP server enabled flag |
+| `opencode_engram_mcp_type` | `local` | MCP server type |
+
+Engram installation per platform:
+- **macOS**: `brew install gentleman-programming/tap/engram`
+- **Linux**: `go install github.com/Gentleman-Programming/engram/cmd/engram@latest`
+
+The role also copies the bundled `engram.ts` plugin file and installs the `@opencode-ai/plugin` npm package.
+
+### OpenTmux Configuration
+
+When `opencode_opentmux_enable` is `true`:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `opencode_opentmux_package` | `opentmux` | npm package name |
+| `opencode_opentmux_tmux_tpm_enable` | `false` | Enable TPM plugin management in the tmux role dependency |
+
+OpenTmux is installed via `npm install -g opentmux`. The role also includes the `tmux` role to install and configure tmux as a dependency. By default, TPM is disabled since OpenTmux provides its own integration.
 
 ### Configuration
 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `opencode_config_dir` | `~/.config/opencode` | OpenCode config directory |
-| `opencode_skip_configure` | `false` | Skip config file deployment |
-
-### Default plugins
-
-```yaml
-opencode_plugins:
-  - name: engram
-    dependencies:
-      - installer: package
-        name: engram
-      - installer: npm
-        name: "@opencode-ai/plugin"
-    files:
-      - engram.ts
-    mcp:
-      command: ["engram", "mcp", "--tools=agent"]
-      enabled: true
-      type: local
-```
-
-### Installer types
-
-| Type | Method | Example |
-|------|--------|---------|
-| `package` | System package manager (apt/brew) | `engram` |
-| `npm` | npm install | `@opencode-ai/plugin` |
-| `pip` | pip install | Python packages |
-| `command` | Custom shell command | `bunx oh-my-openagent install` |
-
-### Installing oh-my-openagent
-
-Add oh-my-openagent to `opencode_plugins` with `installer: command`:
-
-```yaml
-opencode_plugins:
-  - name: engram
-    ...
-  - name: oh-my-openagent
-    dependencies:
-      - installer: command
-        name: oh-my-openagent
-        command: "bunx oh-my-openagent install --no-tui --platform=opencode {{ opencode_omo_flags }}"
-        creates: "{{ ansible_env.HOME }}/.config/opencode/oh-my-openagent.jsonc"
-```
-
-The `creates` parameter makes the command idempotent — it only runs if the marker file doesn't exist.
-
-Set your subscription flags:
-
-```yaml
-opencode_omo_flags: '--claude=yes --openai=no --gemini=yes --copilot=no'
-```
-
-### Installing plugins that need other roles
-
-```yaml
-opencode_plugin_roles:
-  - plugin: opentmux
-    role: tmux
-    vars:
-      tmux_tpm_enable: false
-```
+| `opencode_skip_configure` | `false` | Skip all plugin and config deployment |
 
 ## Dependencies
 
@@ -106,19 +74,8 @@ opencode_plugin_roles:
     - calaviaorg.setup
   roles:
     - role: opencode
-      opencode_plugins:
-        - name: engram
-          dependencies:
-            - installer: package
-              name: engram
-            - installer: npm
-              name: "@opencode-ai/plugin"
-          files:
-            - engram.ts
-          mcp:
-            command: ["engram", "mcp", "--tools=agent"]
-            enabled: true
-            type: local
+      opencode_engram_enable: true
+      opencode_opentmux_enable: true
 ```
 
 ## Platform Support

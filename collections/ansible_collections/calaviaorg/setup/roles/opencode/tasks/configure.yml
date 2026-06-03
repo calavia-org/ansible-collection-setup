@@ -1,19 +1,4 @@
 ---
-- name: 'Ensure config directories exist'
-  ansible.builtin.file:
-    path: '{{ opencode_config_dir }}/{{ item }}'
-    state: directory
-    mode: '0755'
-  loop:
-    - plugins
-
-- name: 'Deploy plugin files'
-  ansible.builtin.copy:
-    src: 'plugins/{{ item }}'
-    dest: '{{ opencode_config_dir }}/plugins/{{ item }}'
-    mode: '0644'
-  loop: "{{ opencode_plugins | map(attribute='files') | flatten | unique }}"
-
 - name: 'Deploy opencode.json'
   ansible.builtin.template:
     src: opencode.json.j2

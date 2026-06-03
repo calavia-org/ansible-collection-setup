@@ -1,0 +1,56 @@
+---
+- name: 'Add mise shell activation'
+  ansible.builtin.lineinfile:
+    path: '{{ ansible_facts.env.HOME }}/.{{ mise_activate_shell }}rc'
+    line: 'eval "$({{ ansible_facts.env.HOME }}/.local/bin/mise activate {{ mise_activate_shell }})"'
+    create: true
+    mode: '0644'
+  when:
+    - mise_activate | bool
+    - mise_installer == 'standalone'
+
+- name: 'Add mise shell activation for brew install'
+  ansible.builtin.lineinfile:
+    path: '{{ ansible_facts.env.HOME }}/.{{ mise_activate_shell }}rc'
+    line: 'eval "$(mise activate {{ mise_activate_shell }})"'
+    create: true
+    mode: '0644'
+  when:
+    - mise_activate | bool
+    - mise_installer == 'brew'
+
+- name: 'Install and set global Python version'
+  ansible.builtin.command:
+    cmd: 'mise use -g python@{{ mise_python_version }}'
+    creates: '{{ ansible_facts.env.HOME }}/.local/share/mise/installs/python/{{ mise_python_version }}'
+  environment:
+    PATH: '{{ ansible_facts.env.HOME }}/.local/bin:{{ ansible_facts.env.PATH }}'
+    MISE_GPG_VERIFY: 'false'
+  when: mise_python_enable | bool
+
+- name: 'Install and set global Java version'
+  ansible.builtin.command:
+    cmd: 'mise use -g java@{{ mise_java_version }}'
+    creates: '{{ ansible_facts.env.HOME }}/.local/share/mise/installs/java/{{ mise_java_version }}'
+  environment:
+    PATH: '{{ ansible_facts.env.HOME }}/.local/bin:{{ ansible_facts.env.PATH }}'
+    MISE_GPG_VERIFY: 'false'
+  when: mise_java_enable | bool
+
+- name: 'Install and set global Node.js version'
+  ansible.builtin.command:
+    cmd: 'mise use -g node@{{ mise_node_version }}'
+    creates: '{{ ansible_facts.env.HOME }}/.local/share/mise/installs/node/{{ mise_node_version }}'
+  environment:
+    PATH: '{{ ansible_facts.env.HOME }}/.local/bin:{{ ansible_facts.env.PATH }}'
+    MISE_GPG_VERIFY: 'false'
+  when: mise_node_enable | bool
+
+- name: 'Install and set global Go version'
+  ansible.builtin.command:
+    cmd: 'mise use -g go@{{ mise_go_version }}'
+    creates: '{{ ansible_facts.env.HOME }}/.local/share/mise/installs/go/{{ mise_go_version }}'
+  environment:
+    PATH: '{{ ansible_facts.env.HOME }}/.local/bin:{{ ansible_facts.env.PATH }}'
+    MISE_GPG_VERIFY: 'false'
+  when: mise_go_enable | bool

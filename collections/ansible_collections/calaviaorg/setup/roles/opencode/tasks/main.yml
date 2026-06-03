@@ -13,16 +13,17 @@
 - name: 'Install OpenCode'
   ansible.builtin.include_tasks: '{{ opencode_installer }}.yml'
 
-- name: 'Install plugin dependencies'
-  ansible.builtin.include_tasks: install_deps.yml
+- name: 'Install Engram plugin'
+  ansible.builtin.include_tasks: engram.yml
+  when:
+    - opencode_engram_enable | bool
+    - not opencode_skip_configure | bool
 
-- name: 'Include plugin roles'
-  ansible.builtin.include_role:
-    name: "{{ item.role }}"
-  loop: "{{ opencode_plugin_roles }}"
-  loop_control:
-    loop_var: item
-  when: item.plugin in (opencode_plugins | map(attribute='name'))
+- name: 'Install OpenTmux plugin'
+  ansible.builtin.include_tasks: opentmux.yml
+  when:
+    - opencode_opentmux_enable | bool
+    - not opencode_skip_configure | bool
 
 - name: 'Configure OpenCode'
   ansible.builtin.include_tasks: configure.yml

@@ -11,6 +11,7 @@ Ansible collection for setting up local development environments.
 | [gpg](./roles/gpg/README.md) | Install and manage GPG keys, agent, and SSH integration |
 | [nvim](./roles/nvim/README.md) | Install and configure Neovim with lazy.nvim plugin management |
 | [opencode](./roles/opencode/README.md) | Install and configure OpenCode with plugin support |
+| [mise](./roles/mise/README.md) | Install and configure mise version manager with global tool defaults |
 
 ## Requirements
 
@@ -42,6 +43,7 @@ collections:
     - role: git
     - role: nvim
     - role: opencode
+    - role: mise
 ```
 
 ## License

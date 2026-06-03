@@ -1,0 +1,21 @@
+---
+mise_installer: standalone
+mise_privilege_escalation: true
+mise_skip_configure: false
+
+# Shell activation
+mise_activate_shell: "{{ 'zsh' if ansible_os_family == 'Darwin' else 'bash' }}"
+mise_activate: true
+
+# Tool toggles and versions
+mise_python_enable: true
+mise_python_version: '3.12'
+
+mise_java_enable: true
+mise_java_version: 'temurin-21'
+
+mise_node_enable: true
+mise_node_version: '22'
+
+mise_go_enable: true
+mise_go_version: 'latest'

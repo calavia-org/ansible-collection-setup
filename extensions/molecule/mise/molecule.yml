@@ -1,0 +1,26 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: instance
+    image: "geerlingguy/docker-ubuntu2204-ansible:latest"
+    pre_build_image: true
+provisioner:
+  name: ansible
+  env:
+    MOLECULE_PROJECT_DIRECTORY: "extensions/molecule/mise"
+  config_options:
+    defaults:
+      interpreter_python: auto_silent
+  inventory:
+    group_vars:
+      all:
+        mise_privilege_escalation: true
+        mise_python_enable: true
+        mise_java_enable: true
+        mise_node_enable: true
+        mise_go_enable: true
+verifier:
+  name: ansible

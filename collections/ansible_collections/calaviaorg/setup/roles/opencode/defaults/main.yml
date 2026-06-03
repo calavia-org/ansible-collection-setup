@@ -5,26 +5,18 @@ opencode_privilege_escalation: true
 opencode_os_pkgs:
   - opencode
 
-opencode_plugins:
-  - name: engram
-    dependencies:
-      - installer: package
-        name: engram
-      - installer: npm
-        name: "@opencode-ai/plugin"
-    files:
-      - engram.ts
-    mcp:
-      command: ["engram", "mcp", "--tools=agent"]
-      enabled: true
-      type: local
+# Plugin toggles — explicit enable/disable per plugin
+opencode_engram_enable: true
+opencode_opentmux_enable: false
 
-opencode_plugin_roles: []
-opencode_pkg_overrides: {}
+# Engram configuration
+opencode_engram_mcp_command: ["engram", "mcp", "--tools=agent"]
+opencode_engram_mcp_enabled: true
+opencode_engram_mcp_type: local
 
-# oh-my-openagent flags (used when plugin oh-my-openagent is listed above)
-opencode_omo_install: false
-opencode_omo_flags: '--claude=no --openai=no --gemini=no --copilot=no'
+# OpenTmux configuration
+opencode_opentmux_package: opentmux
+opencode_opentmux_tmux_tpm_enable: false
 
 opencode_config_dir: '{{ ansible_env.HOME }}/.config/opencode'
 opencode_skip_configure: false
