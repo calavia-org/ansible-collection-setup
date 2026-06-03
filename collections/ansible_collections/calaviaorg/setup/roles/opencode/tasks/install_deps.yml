@@ -39,3 +39,12 @@
   loop_control:
     loop_var: dep
   when: dep.installer == 'pip'
+
+- name: 'Run command-based installers'
+  ansible.builtin.command: "{{ dep.command }}"
+  args:
+    creates: "{{ dep.creates | default(omit) }}"
+  loop: "{{ _opencode_all_deps }}"
+  loop_control:
+    loop_var: dep
+  when: dep.installer == 'command'

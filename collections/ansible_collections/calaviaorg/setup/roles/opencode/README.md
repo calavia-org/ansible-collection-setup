@@ -51,21 +51,42 @@ opencode_plugins:
       type: local
 ```
 
-### Installing plugins that need other roles
+### Installer types
+
+| Type | Method | Example |
+|------|--------|---------|
+| `package` | System package manager (apt/brew) | `engram` |
+| `npm` | npm install | `@opencode-ai/plugin` |
+| `pip` | pip install | Python packages |
+| `command` | Custom shell command | `bunx oh-my-openagent install` |
+
+### Installing oh-my-openagent
+
+Add oh-my-openagent to `opencode_plugins` with `installer: command`:
 
 ```yaml
 opencode_plugins:
-  - name: opentmux
+  - name: engram
+    ...
+  - name: oh-my-openagent
     dependencies:
-      - installer: npm
-        name: opencode-plugin-tmux
-    files:
-      - opentmux.ts
-    mcp:
-      command: ["opentmux"]
-      enabled: true
-      type: local
+      - installer: command
+        name: oh-my-openagent
+        command: "bunx oh-my-openagent install --no-tui --platform=opencode {{ opencode_omo_flags }}"
+        creates: "{{ ansible_env.HOME }}/.config/opencode/oh-my-openagent.jsonc"
+```
 
+The `creates` parameter makes the command idempotent — it only runs if the marker file doesn't exist.
+
+Set your subscription flags:
+
+```yaml
+opencode_omo_flags: '--claude=yes --openai=no --gemini=yes --copilot=no'
+```
+
+### Installing plugins that need other roles
+
+```yaml
 opencode_plugin_roles:
   - plugin: opentmux
     role: tmux

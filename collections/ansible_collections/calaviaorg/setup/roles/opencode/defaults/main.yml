@@ -22,5 +22,9 @@ opencode_plugins:
 opencode_plugin_roles: []
 opencode_pkg_overrides: {}
 
+# oh-my-openagent flags (used when plugin oh-my-openagent is listed above)
+opencode_omo_install: false
+opencode_omo_flags: '--claude=no --openai=no --gemini=no --copilot=no'
+
 opencode_config_dir: '{{ ansible_env.HOME }}/.config/opencode'
 opencode_skip_configure: false
