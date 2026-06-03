@@ -1,0 +1,38 @@
+---
+- name: 'Detect architecture'
+  ansible.builtin.set_fact:
+    _opencode_arch: >-
+      {{- 'linux-arm64' if ansible_architecture == 'aarch64' else 'linux-x64' -}}
+
+- name: 'Build download URL'
+  ansible.builtin.set_fact:
+    _opencode_url: >-
+      {%- if opencode_version | length > 0 -%}
+      https://github.com/anomalyco/opencode/releases/download/v{{ opencode_version }}/opencode-{{ _opencode_arch }}.tar.gz
+      {%- else -%}
+      https://github.com/anomalyco/opencode/releases/latest/download/opencode-{{ _opencode_arch }}.tar.gz
+      {%- endif -%}
+
+- name: 'Download opencode binary'
+  ansible.builtin.get_url:
+    url: '{{ _opencode_url }}'
+    dest: /tmp/opencode.tar.gz
+    mode: '0644'
+  register: _opencode_download
+
+- name: 'Extract opencode to /usr/local/bin'  # noqa: no-handler
+  ansible.builtin.unarchive:
+    src: /tmp/opencode.tar.gz
+    dest: /usr/local/bin/
+    remote_src: true
+  become: '{{ opencode_privilege_escalation }}'
+  become_user: root
+  when: _opencode_download is changed
+
+- name: 'Ensure opencode is executable'  # noqa: no-handler
+  ansible.builtin.file:
+    path: /usr/local/bin/opencode
+    mode: '0755'
+  become: '{{ opencode_privilege_escalation }}'
+  become_user: root
+  when: _opencode_download is changed

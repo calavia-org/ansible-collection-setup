@@ -1,0 +1,5 @@
+---
+- name: 'Installing OpenCode with homebrew'
+  community.general.homebrew:
+    name: '{{ opencode_os_pkgs }}'
+    state: present

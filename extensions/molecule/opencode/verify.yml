@@ -1,0 +1,31 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: 'TEST: opencode binary exists'
+      ansible.builtin.command: which opencode
+      changed_when: false
+      register: opencode_bin
+
+    - name: 'Assert opencode is installed'
+      ansible.builtin.assert:
+        that: opencode_bin.rc == 0
+
+    - name: 'TEST: opencode version'
+      ansible.builtin.command: opencode --version
+      changed_when: false
+      register: opencode_ver
+
+    - name: 'Assert opencode version non-empty'
+      ansible.builtin.assert:
+        that: opencode_ver.stdout | length > 0
+
+    - name: 'TEST: opencode runs in pure mode'
+      ansible.builtin.command: opencode --pure --version
+      changed_when: false
+      register: opencode_pure
+
+    - name: 'Assert pure mode works'
+      ansible.builtin.assert:
+        that: opencode_pure.rc == 0

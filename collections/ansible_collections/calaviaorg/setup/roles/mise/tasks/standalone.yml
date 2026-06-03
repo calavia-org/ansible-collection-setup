@@ -1,0 +1,29 @@
+---
+- name: 'Update apt cache'
+  when: ansible_pkg_mgr == 'apt'
+  become: '{{ mise_privilege_escalation }}'
+  become_user: root
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: 'Ensure curl is installed'
+  ansible.builtin.package:
+    name: curl
+    state: present
+  become: '{{ mise_privilege_escalation }}'
+  become_user: root
+
+- name: 'Download and install mise'
+  ansible.builtin.shell:
+    cmd: 'set -o pipefail && curl -fsSL https://mise.run | sh'
+    creates: '{{ ansible_facts.env.HOME }}/.local/bin/mise'
+    executable: /bin/bash
+
+- name: 'Ensure ~/.local/bin is in PATH'
+  ansible.builtin.lineinfile:
+    path: '{{ ansible_facts.env.HOME }}/.profile'
+    line: 'export PATH="$HOME/.local/bin:$PATH"'
+    create: true
+    mode: '0644'
+  when: ansible_os_family != 'Darwin'

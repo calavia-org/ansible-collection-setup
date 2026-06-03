@@ -1,0 +1,11 @@
+---
+- name: 'Install OpenTmux via npm'
+  ansible.builtin.command:
+    cmd: 'npm install -g {{ opencode_opentmux_package }}'
+    creates: '{{ ansible_env.HOME }}/.config/npm/node_modules/{{ opencode_opentmux_package }}'
+
+- name: 'Include tmux role for OpenTmux dependency'
+  ansible.builtin.include_role:
+    name: tmux
+  vars:
+    tmux_tpm_enable: '{{ opencode_opentmux_tmux_tpm_enable }}'

@@ -1,0 +1,30 @@
+---
+- name: 'Install Engram via Homebrew'
+  community.general.homebrew:
+    name: gentleman-programming/tap/engram
+    state: present
+  when: ansible_os_family == 'Darwin'
+
+- name: 'Install Engram via Go'
+  ansible.builtin.command:
+    cmd: go install github.com/Gentleman-Programming/engram/cmd/engram@latest
+    creates: '{{ ansible_env.HOME }}/go/bin/engram'
+  when: ansible_os_family != 'Darwin'
+
+- name: 'Ensure Engram config directory exists'
+  ansible.builtin.file:
+    path: '{{ opencode_config_dir }}/plugins'
+    state: directory
+    mode: '0755'
+
+- name: 'Deploy Engram plugin file'
+  ansible.builtin.copy:
+    src: 'plugins/engram.ts'
+    dest: '{{ opencode_config_dir }}/plugins/engram.ts'
+    mode: '0644'
+
+- name: 'Install Engram npm dependencies'
+  ansible.builtin.command:
+    cmd: npm install @opencode-ai/plugin
+    chdir: '{{ opencode_config_dir }}'
+    creates: '{{ opencode_config_dir }}/node_modules/@opencode-ai/plugin'

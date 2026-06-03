@@ -1,0 +1,88 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: 'TEST: mise binary exists'
+      ansible.builtin.command: which mise
+      changed_when: false
+      register: mise_bin
+      environment:
+        PATH: '{{ ansible_facts.env.HOME }}/.local/bin:{{ ansible_facts.env.PATH }}'
+
+    - name: 'Assert mise is installed'
+      ansible.builtin.assert:
+        that: mise_bin.rc == 0
+        msg: 'mise binary not found'
+
+    - name: 'TEST: mise version'
+      ansible.builtin.command: mise version
+      changed_when: false
+      register: mise_ver
+      environment:
+        PATH: '{{ ansible_facts.env.HOME }}/.local/bin:{{ ansible_facts.env.PATH }}'
+
+    - name: 'Assert mise version non-empty'
+      ansible.builtin.assert:
+        that: mise_ver.stdout | length > 0
+        msg: 'mise version not retrieved'
+
+    - name: 'TEST: Python is available via mise'
+      ansible.builtin.command:
+        cmd: mise which python
+      changed_when: false
+      register: mise_python
+      environment:
+        PATH: '{{ ansible_facts.env.HOME }}/.local/bin:{{ ansible_facts.env.PATH }}'
+      when: mise_python_enable | bool
+
+    - name: 'Assert Python was installed'
+      ansible.builtin.assert:
+        that: mise_python.rc == 0
+        msg: 'Python not installed via mise'
+      when: mise_python_enable | bool
+
+    - name: 'TEST: Java is available via mise'
+      ansible.builtin.command:
+        cmd: mise which java
+      changed_when: false
+      register: mise_java
+      environment:
+        PATH: '{{ ansible_facts.env.HOME }}/.local/bin:{{ ansible_facts.env.PATH }}'
+      when: mise_java_enable | bool
+
+    - name: 'Assert Java was installed'
+      ansible.builtin.assert:
+        that: mise_java.rc == 0
+        msg: 'Java not installed via mise'
+      when: mise_java_enable | bool
+
+    - name: 'TEST: Node.js is available via mise'
+      ansible.builtin.command:
+        cmd: mise which node
+      changed_when: false
+      register: mise_node
+      environment:
+        PATH: '{{ ansible_facts.env.HOME }}/.local/bin:{{ ansible_facts.env.PATH }}'
+      when: mise_node_enable | bool
+
+    - name: 'Assert Node.js was installed'
+      ansible.builtin.assert:
+        that: mise_node.rc == 0
+        msg: 'Node.js not installed via mise'
+      when: mise_node_enable | bool
+
+    - name: 'TEST: Go is available via mise'
+      ansible.builtin.command:
+        cmd: mise which go
+      changed_when: false
+      register: mise_go
+      environment:
+        PATH: '{{ ansible_facts.env.HOME }}/.local/bin:{{ ansible_facts.env.PATH }}'
+      when: mise_go_enable | bool
+
+    - name: 'Assert Go was installed'
+      ansible.builtin.assert:
+        that: mise_go.rc == 0
+        msg: 'Go not installed via mise'
+      when: mise_go_enable | bool

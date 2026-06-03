@@ -1,0 +1,13 @@
+{
+  "$schema": "https://opencode.ai/config.json"{% if opencode_engram_enable | bool %},
+  "mcp": {
+    "engram": {
+      "command": {{ opencode_engram_mcp_command | tojson }},
+      "enabled": {{ opencode_engram_mcp_enabled | lower }},
+      "type": "{{ opencode_engram_mcp_type }}"
+    }
+  }{% endif %}{% if opencode_opentmux_enable | bool %},
+  "plugin": [
+    "opentmux"
+  ]{% endif %}
+}

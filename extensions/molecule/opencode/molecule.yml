@@ -6,18 +6,15 @@ dependency:
 driver:
   name: default
 platforms:
-  - name: darwin-instance
+  - name: instance
 provisioner:
   name: ansible
+  env:
+    MOLECULE_PROJECT_DIRECTORY: "extensions/molecule/opencode"
   inventory:
     group_vars:
       all:
         ansible_connection: local
-        git_skip_configure: true
-        gpg_skip_configure: true
-        nvim_skip_configure: true
-        tmux_tpm_enable: false
         opencode_skip_configure: true
-        mise_skip_configure: true
 verifier:
   name: ansible
