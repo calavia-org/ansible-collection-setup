@@ -40,7 +40,7 @@ jobs:
         run: >-
           python3 -m tox
           --ansible
-          -e sanity
+          -e sanity-py3.12-2.19
           --conf tox-ansible.ini
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -66,7 +66,7 @@ jobs:
         run: >-
           python3 -m tox
           --ansible
-          -e unit
+          -e unit-py3.12-2.19
           --conf tox-ansible.ini
           --
           --show-capture=all
@@ -102,7 +102,7 @@ jobs:
         run: >-
           python3 -m tox
           --ansible
-          -e integration
+          -e integration-py3.12-2.19
           --conf tox-ansible.ini
           --
           --show-capture=all
@@ -146,43 +146,28 @@ jobs:
           sed -i "s/^version: .*/version: ${{ steps.version.outputs.version }}/" collections/ansible_collections/calaviaorg/setup/galaxy.yml
           grep "^version:" collections/ansible_collections/calaviaorg/setup/galaxy.yml
 
-      - name: Generate CHANGELOG
+      - name: Generate release notes
+        id: changelog
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
 
-          if [ -f CHANGELOG.md ]; then
-            echo "# Changelog" > CHANGELOG.md.new
-          else
-            echo "# Changelog" > CHANGELOG.md.new
-            echo "" >> CHANGELOG.md.new
-          fi
+          {
+            echo "# Changelog"
+            echo ""
+            echo "## [$VERSION] - $(date +%Y-%m-%d)"
+            echo ""
 
-          echo "## [$VERSION] - $(date +%Y-%m-%d)" >> CHANGELOG.md.new
-          echo "" >> CHANGELOG.md.new
+            if [ -n "$PREVIOUS_TAG" ]; then
+              git log "$PREVIOUS_TAG..HEAD" --pretty=format:"- %s (%h)" --no-merges
+            else
+              git log --pretty=format:"- %s (%h)" --no-merges
+            fi
 
-          if [ -n "$PREVIOUS_TAG" ]; then
-            git log "$PREVIOUS_TAG..HEAD" --pretty=format:"- %s (%h)" --no-merges >> CHANGELOG.md.new
-          else
-            git log --pretty=format:"- %s (%h)" --no-merges >> CHANGELOG.md.new
-          fi
+            echo ""
+          } > RELEASE_NOTES.md
 
-          echo "" >> CHANGELOG.md.new
-
-          if [ -f CHANGELOG.md ]; then
-            tail -n +2 CHANGELOG.md >> CHANGELOG.md.new
-          fi
-
-          mv CHANGELOG.md.new CHANGELOG.md
-          cat CHANGELOG.md | head -30
-
-      - name: Commit version and CHANGELOG
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add collections/ansible_collections/calaviaorg/setup/galaxy.yml CHANGELOG.md
-          git diff --cached --quiet || git commit -m "chore: release v${{ steps.version.outputs.version }}"
-          git push origin HEAD:main
+          cat RELEASE_NOTES.md | head -30
 
       - name: Build collection
         run: |
@@ -195,10 +180,10 @@ jobs:
         with:
           tag_name: v${{ steps.version.outputs.version }}
           name: Release v${{ steps.version.outputs.version }}
-          body_path: CHANGELOG.md
+          body_path: RELEASE_NOTES.md
           files: |
             collections/ansible_collections/calaviaorg/setup/calaviaorg-setup-*.tar.gz
-          generate_release_notes: true
+          generate_release_notes: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
