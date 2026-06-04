@@ -1,8 +1,8 @@
 ---
 - name: 'Install Engram via Homebrew'
-  community.general.homebrew:
-    name: gentleman-programming/tap/engram
-    state: present
+  ansible.builtin.command:
+    cmd: 'brew install gentleman-programming/tap/engram'
+  changed_when: false
   when: ansible_os_family == 'Darwin'
 
 - name: 'Install Engram via Go'
