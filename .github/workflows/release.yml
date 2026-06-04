@@ -115,6 +115,8 @@ jobs:
     needs: [sanity, unit_test, integration_test]
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -175,6 +177,13 @@ jobs:
           ansible-galaxy collection build --force
           ls -la *.tar.gz
 
+      - name: Upload collection artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: collection-artifact
+          path: collections/ansible_collections/calaviaorg/setup/calaviaorg-setup-*.tar.gz
+          retention-days: 1
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -193,3 +202,52 @@ jobs:
           ansible-galaxy collection publish calaviaorg-setup-*.tar.gz --api-key="${{ secrets.ANSIBLE_GALAXY_API_KEY }}"
         env:
           ANSIBLE_GALAXY_API_KEY: ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
+
+  build-ee:
+    name: Build Execution Environment
+    needs: release
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Download collection artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: collection-artifact
+          path: collections/ansible_collections/calaviaorg/setup/
+
+      - name: Copy collection to EE context
+        run: |
+          cp collections/ansible_collections/calaviaorg/setup/calaviaorg-setup-*.tar.gz context/_build/
+          echo "  - name: calaviaorg-setup-${{ needs.release.outputs.version }}.tar.gz" >> context/_build/requirements.yml
+
+      - name: Build execution environment
+        run: |
+          docker build \
+            -f context/Containerfile \
+            -t ghcr.io/${{ github.repository_owner }}/ansible-ee-setup:${{ needs.release.outputs.version }} \
+            -t ghcr.io/${{ github.repository_owner }}/ansible-ee-setup:latest \
+            context/
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push execution environment image
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/ansible-ee-setup:${{ needs.release.outputs.version }}
+          docker push ghcr.io/${{ github.repository_owner }}/ansible-ee-setup:latest
