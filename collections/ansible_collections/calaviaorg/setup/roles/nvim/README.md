@@ -50,6 +50,7 @@ and configurable treesitter languages.
 | `nvim_plugin_lualine` | `true` | lualine.nvim statusline |
 | `nvim_plugin_which_key` | `true` | which-key.nvim key hints |
 | `nvim_plugin_neotree` | `true` | neo-tree.nvim file explorer |
+| `nvim_plugin_opencode` | `false` | opencode.nvim OpenCode AI integration |
 
 ### LSP Servers
 
@@ -95,6 +96,7 @@ nvim_treesitter_languages:
 ## Dependencies
 
 - [git](../git/README.md) — required for lazy.nvim bootstrap
+- [opencode](../opencode/README.md) — required when `nvim_plugin_opencode` is enabled
 
 ## Example Playbook
 

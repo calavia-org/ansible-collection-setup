@@ -1,0 +1,41 @@
+---
+- name: 'Full macOS development machine setup'
+  hosts: localhost
+  connection: local
+  collections:
+    - calaviaorg.setup
+  vars:
+    # Git identity (used by gpg key generation too)
+    git_user_name: '{{ lookup("env", "USER") }}'
+    git_user_email: '{{ lookup("env", "USER") }}@{{ ansible_hostname }}'
+
+    # GPG key generation
+    gpg_key_manage: true
+    gpg_key_real_name: '{{ git_user_name }}'
+    gpg_key_email: '{{ git_user_email }}'
+    gpg_key_export_public: true
+
+    # Enable all opencode plugins
+    opencode_engram_enable: true
+    opencode_opentmux_enable: true
+
+    # Enable all mise tools
+    mise_python_enable: true
+    mise_java_enable: true
+    mise_node_enable: true
+    mise_go_enable: true
+
+  roles:
+    - role: git
+      git_gpg_sign: true
+
+    - role: gpg
+
+    - role: tmux
+      tmux_tpm_enable: true
+
+    - role: nvim
+
+    - role: opencode
+
+    - role: mise

@@ -35,6 +35,7 @@
     - { file: lsp.lua, toggle: nvim_plugin_lsp }
     - { file: tools.lua, toggle: nvim_plugin_tools }
     - { file: ui.lua, toggle: nvim_plugin_ui }
+    - { file: opencode.lua, toggle: nvim_plugin_opencode }
   when: vars[item.toggle]
 
 - name: 'Deploy lazy-lock.json'

@@ -25,6 +25,7 @@ nvim_plugin_tokyonight: true
 nvim_plugin_lualine: true
 nvim_plugin_which_key: true
 nvim_plugin_neotree: true
+nvim_plugin_opencode: false
 
 nvim_lsp_servers:
   - lua_ls
