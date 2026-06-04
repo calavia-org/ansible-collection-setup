@@ -40,7 +40,7 @@ jobs:
         run: >-
           python3 -m tox
           --ansible
-          -e sanity-py3.12-2.19
+          -e sanity-py3.12-milestone
           --conf tox-ansible.ini
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -66,7 +66,7 @@ jobs:
         run: >-
           python3 -m tox
           --ansible
-          -e unit-py3.12-2.19
+          -e unit-py3.12-milestone
           --conf tox-ansible.ini
           --
           --show-capture=all
@@ -102,7 +102,7 @@ jobs:
         run: >-
           python3 -m tox
           --ansible
-          -e integration-py3.12-2.19
+          -e integration-py3.12-milestone
           --conf tox-ansible.ini
           --
           --show-capture=all
