@@ -16,3 +16,4 @@ galaxy_info:
 dependencies:
   - role: git
     git_skip_configure: true
+  - role: mise
