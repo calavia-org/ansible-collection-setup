@@ -15,16 +15,6 @@ on:
       - galaxy.yml
       - requirements.yml
       - tox-ansible.ini
-  push:
-    paths:
-      - collections/ansible_collections/calaviaorg/setup/playbooks/**
-      - collections/ansible_collections/calaviaorg/setup/plugins/**
-      - collections/ansible_collections/calaviaorg/setup/roles/**
-      - tests/**
-      - extensions/molecule/**
-      - galaxy.yml
-      - requirements.yml
-      - tox-ansible.ini
 jobs:
   tox-matrix:
     runs-on: ubuntu-latest
