@@ -16,41 +16,56 @@ on:
       - requirements.yml
       - tox-ansible.ini
       - .github/workflows/pr.yml
+
 jobs:
-  detect-changes:
+  detect_changes:
     runs-on: ubuntu-latest
     outputs:
-      unit-tests: ${{ steps.filter.outputs.unit-tests }}
-      roles: ${{ steps.filter.outputs.roles }}
-      collection: ${{ steps.filter.outputs.collection }}
+      unit_tests: ${{ steps.changes.outputs.unit_tests }}
+      roles: ${{ steps.changes.outputs.roles }}
+      collection: ${{ steps.changes.outputs.collection }}
     steps:
       - uses: actions/checkout@v6
-      - uses: dorny/paths-filter@v3
-        id: filter
         with:
-          filters: |
-            unit-tests:
-              - tests/unit/**
-              - collections/ansible_collections/calaviaorg/setup/plugins/**
-              - collections/ansible_collections/calaviaorg/setup/modules/**
-            roles:
-              - collections/ansible_collections/calaviaorg/setup/roles/**
-              - extensions/molecule/**
-            collection:
-              - galaxy.yml
-              - requirements.yml
-              - tox-ansible.ini
-              - .github/workflows/pr.yml
+          fetch-depth: 0
+      - name: Detect changed files
+        id: changes
+        run: |
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.event.pull_request.head.sha }}"
 
-  tox-matrix:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.unit-tests == 'true' || needs.detect-changes.outputs.roles == 'true' || needs.detect-changes.outputs.collection == 'true'
+          CHANGED_FILES=$(git diff --name-only "$BASE" "$HEAD")
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          if echo "$CHANGED_FILES" | grep -qE '^(tests/unit/|collections/ansible_collections/calaviaorg/setup/plugins/|collections/ansible_collections/calaviaorg/setup/modules/)'; then
+            echo "unit_tests=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "unit_tests=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          if echo "$CHANGED_FILES" | grep -qE '^(collections/ansible_collections/calaviaorg/setup/roles/|extensions/molecule/)'; then
+            echo "roles=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "roles=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          if echo "$CHANGED_FILES" | grep -qE '^(galaxy\.yml|requirements\.yml|tox-ansible\.ini|\.github/workflows/pr\.yml)$'; then
+            echo "collection=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "collection=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  tox_matrix:
+    needs: detect_changes
+    if: needs.detect_changes.outputs.unit_tests == 'true' || needs.detect_changes.outputs.roles == 'true' || needs.detect_changes.outputs.collection == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v6
@@ -61,26 +76,26 @@ jobs:
         run: python3 -m pip install tox-ansible
 
       - name: Generate unit-tests matrix
-        id: unit-matrix
+        id: unit_matrix
         run: |
           python3 -m tox --ansible --gh-matrix --matrix-scope unit --conf tox-ansible.ini
 
       - name: Generate integration-tests matrix
-        id: integration-matrix
+        id: integration_matrix
         run: |
           python3 -m tox --ansible --gh-matrix --matrix-scope integration --conf tox-ansible.ini
 
     outputs:
-      unitEnvList: ${{ steps.unit-matrix.outputs.envlist }}
-      integrationEnvList: ${{ steps.integration-matrix.outputs.envlist }}
+      unitEnvList: ${{ steps.unit_matrix.outputs.envlist }}
+      integrationEnvList: ${{ steps.integration_matrix.outputs.envlist }}
 
   unit_test:
-    needs: [tox-matrix, detect-changes]
-    if: needs.detect-changes.outputs.unit-tests == 'true' || needs.detect-changes.outputs.collection == 'true'
+    needs: [tox_matrix, detect_changes]
+    if: needs.detect_changes.outputs.unit_tests == 'true' || needs.detect_changes.outputs.collection == 'true'
     strategy:
       fail-fast: false
       matrix:
-        entry: ${{ fromJson(needs.tox-matrix.outputs.unitEnvList) }}
+        entry: ${{ fromJson(needs.tox_matrix.outputs.unitEnvList) }}
     name: ${{ matrix.entry.name }}
     runs-on: ubuntu-latest
     steps:
@@ -124,12 +139,12 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   integration_test:
-    needs: [tox-matrix, detect-changes]
-    if: needs.detect-changes.outputs.roles == 'true' || needs.detect-changes.outputs.collection == 'true'
+    needs: [tox_matrix, detect_changes]
+    if: needs.detect_changes.outputs.roles == 'true' || needs.detect_changes.outputs.collection == 'true'
     strategy:
       fail-fast: false
       matrix:
-        entry: ${{ fromJson(needs.tox-matrix.outputs.integrationEnvList) }}
+        entry: ${{ fromJson(needs.tox_matrix.outputs.integrationEnvList) }}
     name: ${{ matrix.entry.name }}
     runs-on: ubuntu-latest
     steps:
@@ -165,12 +180,14 @@ jobs:
           files: |
             test/reports/integration-*.xml
 
-  molecule-darwin:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.roles == 'true' || needs.detect-changes.outputs.collection == 'true'
+  molecule_darwin:
+    needs: detect_changes
+    if: needs.detect_changes.outputs.roles == 'true' || needs.detect_changes.outputs.collection == 'true'
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
@@ -190,8 +207,8 @@ jobs:
           -k darwin
 
   test_passed:
-    needs: [unit_test, integration_test, molecule-darwin]
-    if: always() && (needs.unit_test.result == 'success' || needs.unit_test.result == 'skipped') && (needs.integration_test.result == 'success' || needs.integration_test.result == 'skipped') && (needs.molecule-darwin.result == 'success' || needs.molecule-darwin.result == 'skipped')
+    needs: [unit_test, integration_test, molecule_darwin]
+    if: always() && (needs.unit_test.result == 'success' || needs.unit_test.result == 'skipped') && (needs.integration_test.result == 'success' || needs.integration_test.result == 'skipped') && (needs.molecule_darwin.result == 'success' || needs.molecule_darwin.result == 'skipped')
     runs-on: ubuntu-latest
     steps:
       - name: Check all required tests passed
