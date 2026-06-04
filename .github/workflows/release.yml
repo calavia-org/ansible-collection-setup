@@ -1,19 +1,26 @@
 name: Release Collection
 
 on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 1.1.0)'
+        required: true
+        type: string
   push:
-    branches:
-      - main
-      - release-*
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: write
 
 jobs:
-  release:
-    name: Build and analyze
+  sanity:
+    name: Sanity Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
       - name: Setup Python
@@ -21,7 +28,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install tox-ansible, includes tox
+      - name: Install tox-ansible
         run: python3 -m pip install tox-ansible
 
       - name: Run sanity test
@@ -32,6 +39,22 @@ jobs:
           --conf tox-ansible.ini
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  unit_test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install tox-ansible
+        run: python3 -m pip install tox-ansible
 
       - name: Run unit test
         run: >-
@@ -47,6 +70,27 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v6.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  integration_test:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install tox-ansible
+        run: python3 -m pip install tox-ansible
+
       - name: Run integration test
         run: >-
           python3 -m tox
@@ -59,7 +103,132 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v6.0.1
+  molecule_darwin:
+    name: Molecule Tests (macOS)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v6
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install tox-ansible
+        run: python3 -m pip install tox-ansible
+
+      - name: Install community.general
+        run: ansible-galaxy collection install community.general -p $PWD/collections
+
+      - name: Run molecule tests (Darwin)
+        run: >-
+          python3 -m tox
+          --ansible
+          -e integration-py3.12-2.19
+          --conf tox-ansible.ini
+          --
+          --show-capture=all
+          --junit-xml=tests/reports/integration-darwin.xml
+          -k darwin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release:
+    name: Build and Release
+    needs: [sanity, unit_test, integration_test, molecule_darwin]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Extract version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Releasing version: $VERSION"
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install ansible tox-ansible
+
+      - name: Update galaxy.yml version
+        run: |
+          sed -i "s/^version: .*/version: ${{ steps.version.outputs.version }}/" collections/ansible_collections/calaviaorg/setup/galaxy.yml
+          grep "^version:" collections/ansible_collections/calaviaorg/setup/galaxy.yml
+
+      - name: Generate CHANGELOG
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+
+          if [ -f CHANGELOG.md ]; then
+            echo "# Changelog" > CHANGELOG.md.new
+          else
+            echo "# Changelog" > CHANGELOG.md.new
+            echo "" >> CHANGELOG.md.new
+          fi
+
+          echo "## [$VERSION] - $(date +%Y-%m-%d)" >> CHANGELOG.md.new
+          echo "" >> CHANGELOG.md.new
+
+          if [ -n "$PREVIOUS_TAG" ]; then
+            git log "$PREVIOUS_TAG..HEAD" --pretty=format:"- %s (%h)" --no-merges >> CHANGELOG.md.new
+          else
+            git log --pretty=format:"- %s (%h)" --no-merges >> CHANGELOG.md.new
+          fi
+
+          echo "" >> CHANGELOG.md.new
+
+          if [ -f CHANGELOG.md ]; then
+            tail -n +2 CHANGELOG.md >> CHANGELOG.md.new
+          fi
+
+          mv CHANGELOG.md.new CHANGELOG.md
+          cat CHANGELOG.md | head -30
+
+      - name: Commit version and CHANGELOG
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add collections/ansible_collections/calaviaorg/setup/galaxy.yml CHANGELOG.md
+          git diff --cached --quiet || git commit -m "chore: release v${{ steps.version.outputs.version }}"
+          git push origin HEAD:main
+
+      - name: Build collection
+        run: |
+          cd collections/ansible_collections/calaviaorg/setup
+          ansible-galaxy collection build --force
+          ls -la *.tar.gz
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Release v${{ steps.version.outputs.version }}
+          body_path: CHANGELOG.md
+          files: |
+            collections/ansible_collections/calaviaorg/setup/calaviaorg-setup-*.tar.gz
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to Ansible Galaxy
+        run: |
+          cd collections/ansible_collections/calaviaorg/setup
+          ansible-galaxy collection publish calaviaorg-setup-*.tar.gz --api-key="${{ secrets.ANSIBLE_GALAXY_API_KEY }}"
+        env:
+          ANSIBLE_GALAXY_API_KEY: ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
