@@ -1,4 +1,5 @@
 ---
+offline: true
 exclude_paths:
   - .tox
   - collections/ansible_collections/calaviaorg/setup/playbooks/

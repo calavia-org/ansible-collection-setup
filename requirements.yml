@@ -1,13 +1,6 @@
 ---
 roles: []
 collections:
-  # calaviaorg.setup is sourced from git since the namespace is not yet
-  # approved on Galaxy. Once approved, change to:
-  #   - name: calaviaorg.setup
-  #     version: ">=1.0.0,<2.0.0"
-  - name: https://github.com/calavia-org/ansible-collection-setup.git
-    version: main
-
   - name: community.general
     version: ">=9.0.0,<14.0.0"
   - name: community.docker
