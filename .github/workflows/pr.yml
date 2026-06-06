@@ -199,11 +199,11 @@ jobs:
         run: >-
           python3 -m tox
           --ansible
-          -e integration-py3.12-2.19
+          -e integration-py3.12-milestone
           --conf tox-ansible.ini
           --
           --show-capture=all
-          --junit-xml=test/reports/integration-darwin-py3.12-2.19.xml
+          --junit-xml=test/reports/integration-darwin-py3.12-milestone.xml
           -k darwin
 
   test_passed:
