@@ -3,7 +3,7 @@
   hosts: localhost
   connection: local
   collections:
-    - calaviaorg.setup
+    - jcalavia_org.setup
   vars:
     # Git identity (used by gpg key generation too)
     git_user_name: '{{ lookup("env", "USER") }}'

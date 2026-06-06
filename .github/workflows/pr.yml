@@ -7,9 +7,9 @@ concurrency:
 on:
   pull_request:
     paths:
-      - collections/ansible_collections/calaviaorg/setup/playbooks/**
-      - collections/ansible_collections/calaviaorg/setup/plugins/**
-      - collections/ansible_collections/calaviaorg/setup/roles/**
+      - collections/ansible_collections/jcalavia_org/setup/playbooks/**
+      - collections/ansible_collections/jcalavia_org/setup/plugins/**
+      - collections/ansible_collections/jcalavia_org/setup/roles/**
       - tests/**
       - extensions/molecule/**
       - galaxy.yml
@@ -38,13 +38,13 @@ jobs:
           echo "Changed files:"
           echo "$CHANGED_FILES"
 
-          if echo "$CHANGED_FILES" | grep -qE '^(tests/unit/|collections/ansible_collections/calaviaorg/setup/plugins/|collections/ansible_collections/calaviaorg/setup/modules/)'; then
+          if echo "$CHANGED_FILES" | grep -qE '^(tests/unit/|collections/ansible_collections/jcalavia_org/setup/plugins/|collections/ansible_collections/jcalavia_org/setup/modules/)'; then
             echo "unit_tests=true" >> "$GITHUB_OUTPUT"
           else
             echo "unit_tests=false" >> "$GITHUB_OUTPUT"
           fi
 
-          if echo "$CHANGED_FILES" | grep -qE '^(collections/ansible_collections/calaviaorg/setup/roles/|extensions/molecule/)'; then
+          if echo "$CHANGED_FILES" | grep -qE '^(collections/ansible_collections/jcalavia_org/setup/roles/|extensions/molecule/)'; then
             echo "roles=true" >> "$GITHUB_OUTPUT"
           else
             echo "roles=false" >> "$GITHUB_OUTPUT"

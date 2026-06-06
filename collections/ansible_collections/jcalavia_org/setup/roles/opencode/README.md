@@ -71,7 +71,7 @@ OpenTmux is installed via `npm install -g opentmux`. The role also includes the 
 ```yaml
 - hosts: all
   collections:
-    - calaviaorg.setup
+    - jcalavia_org.setup
   roles:
     - role: opencode
       opencode_engram_enable: true

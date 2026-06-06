@@ -63,7 +63,7 @@ None.
 ```yaml
 - hosts: all
   collections:
-    - calaviaorg.setup
+    - jcalavia_org.setup
   roles:
     - role: tmux
       tmux_tpm_enable: true

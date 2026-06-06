@@ -1,4 +1,4 @@
-# Ansible Collection - calaviaorg.setup
+# Ansible Collection - jcalavia_org.setup
 
 [![codecov](https://codecov.io/gh/calavia-org/ansible-collection-setup/branch/main/graph/badge.svg?token=T5NUI2U885)](https://codecov.io/gh/calavia-org/ansible-collection-setup)
 [![Test collection](https://github.com/calavia-org/ansible-collection-setup/actions/workflows/pr.yml/badge.svg)](https://github.com/calavia-org/ansible-collection-setup/actions/workflows/pr.yml)

@@ -56,7 +56,7 @@ None.
 ```yaml
 - hosts: all
   collections:
-    - calaviaorg.setup
+    - jcalavia_org.setup
   roles:
     - role: gpg
       gpg_skip_configure: false
@@ -71,7 +71,7 @@ Example with git integration (GPG signing):
 ```yaml
 - hosts: all
   collections:
-    - calaviaorg.setup
+    - jcalavia_org.setup
   roles:
     - role: gpg
       gpg_key_manage: true

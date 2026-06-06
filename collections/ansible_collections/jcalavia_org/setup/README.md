@@ -1,4 +1,4 @@
-# calaviaorg.setup
+# jcalavia_org.setup
 
 Ansible collection for setting up local development environments.
 
@@ -21,14 +21,14 @@ Ansible collection for setting up local development environments.
 ## Installation
 
 ```bash
-ansible-galaxy collection install calaviaorg.setup
+ansible-galaxy collection install jcalavia_org.setup
 ```
 
 Or add to `requirements.yml`:
 
 ```yaml
 collections:
-  - name: calaviaorg.setup
+  - name: jcalavia_org.setup
     version: 1.0.0
 ```
 
@@ -37,7 +37,7 @@ collections:
 ```yaml
 - hosts: all
   collections:
-    - calaviaorg.setup
+    - jcalavia_org.setup
   roles:
     - role: tmux
     - role: git
