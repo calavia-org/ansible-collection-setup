@@ -1,0 +1,105 @@
+name: Auto-bump Version
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - main
+
+jobs:
+  bump-version:
+    if: github.event.pull_request.head.repo.full_name == github.repository && (startsWith(github.head_ref, 'major/') || startsWith(github.head_ref, 'feat/') || startsWith(github.head_ref, 'fix/'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract branch type
+        id: branch
+        run: |
+          BRANCH="${{ github.head_ref }}"
+          if [[ "$BRANCH" == major/* ]]; then
+            echo "type=major" >> "$GITHUB_OUTPUT"
+          elif [[ "$BRANCH" == feat/* ]]; then
+            echo "type=minor" >> "$GITHUB_OUTPUT"
+          elif [[ "$BRANCH" == fix/* ]]; then
+            echo "type=patch" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Read current version
+        id: current
+        run: |
+          VERSION=$(grep "^version:" collections/ansible_collections/jcalavia_org/setup/galaxy.yml | sed 's/version: //')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Current version: $VERSION"
+
+      - name: Bump version
+        id: bump
+        run: |
+          CURRENT="${{ steps.current.outputs.version }}"
+          TYPE="${{ steps.branch.outputs.type }}"
+
+          # Parse semver
+          MAJOR=$(echo "$CURRENT" | cut -d. -f1)
+          MINOR=$(echo "$CURRENT" | cut -d. -f2)
+          PATCH=$(echo "$CURRENT" | cut -d. -f3)
+
+          case "$TYPE" in
+            major)
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+            minor)
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            patch)
+              PATCH=$((PATCH + 1))
+              ;;
+          esac
+
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+          echo "Bumping $CURRENT -> $NEW_VERSION ($TYPE)"
+
+      - name: Update galaxy.yml
+        run: |
+          sed -i "s/^version: .*/version: ${{ steps.bump.outputs.new_version }}/" collections/ansible_collections/jcalavia_org/setup/galaxy.yml
+
+      - name: Check if changes exist
+        id: check
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No changes to commit"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Version bump detected"
+          fi
+
+      - name: Check if last commit was already a version bump
+        id: last_commit
+        run: |
+          LAST_COMMIT=$(git log -1 --pretty=%B)
+          if echo "$LAST_COMMIT" | grep -q "chore: bump version"; then
+            echo "already_bumped=true" >> "$GITHUB_OUTPUT"
+            echo "Last commit was already a version bump, skipping"
+          else
+            echo "already_bumped=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push version bump
+        if: steps.check.outputs.changed == 'true' && steps.last_commit.outputs.already_bumped == 'false'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add collections/ansible_collections/jcalavia_org/setup/galaxy.yml
+          git commit -m "chore: bump version to ${{ steps.bump.outputs.new_version }} (${{ steps.branch.outputs.type }})"
+          git push origin ${{ github.head_ref }}
