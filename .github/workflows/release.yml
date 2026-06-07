@@ -208,28 +208,23 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install ansible-builder and docker
+        run: |
+          python3 -m pip install ansible-builder
+
       - name: Download collection artifact
         uses: actions/download-artifact@v4
         with:
           name: collection-artifact
           path: collections/ansible_collections/jcalavia_org/setup/
 
-      - name: Create EE context directories
-        run: |
-          mkdir -p context/_build
-
-      - name: Copy collection to EE context
-        run: |
-          cp collections/ansible_collections/jcalavia_org/setup/jcalavia_org-setup-*.tar.gz context/_build/
-          echo "  - name: jcalavia_org-setup-${{ needs.build.outputs.version }}.tar.gz" >> context/_build/requirements.yml
-
       - name: Build execution environment
         run: |
-          docker build \
-            -f context/Containerfile \
-            -t ghcr.io/${{ github.repository_owner }}/ansible-ee-setup:${{ needs.build.outputs.version }} \
-            -t ghcr.io/${{ github.repository_owner }}/ansible-ee-setup:latest \
-            context/
+          ansible-builder build \
+            --file execution-environment.yml \
+            --context ./context \
+            --tag ghcr.io/${{ github.repository_owner }}/ansible-ee-setup:${{ needs.build.outputs.version }} \
+            --tag ghcr.io/${{ github.repository_owner }}/ansible-ee-setup:latest
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
