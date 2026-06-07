@@ -13,5 +13,6 @@ dependencies:
 
 additional_build_steps:
   prepend_base:
+    - RUN ln -s /usr/local/bin/python3.12 /usr/bin/python3 || true
     - RUN pip3 install --upgrade pip setuptools
     - RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
