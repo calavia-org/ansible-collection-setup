@@ -5,14 +5,22 @@ images:
   base_image:
     name: python:3.12-slim
 
+options:
+  package_manager_path: /usr/bin/apt-get
+
 dependencies:
   python:
-    - ansible-core>=2.15.0
-  galaxy:
-    - requirements.yml
+    - ansible-core>=2.19.0
+  ansible_runner:
+    package_pip: ansible-runner
+  system:
+    - git
 
 additional_build_steps:
   prepend_base:
     - RUN ln -s /usr/local/bin/python3.12 /usr/bin/python3 || true
     - RUN pip3 install --upgrade pip setuptools
-    - RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+    - RUN pip3 install ansible-core>=2.19.0
+    - RUN apt-get update && apt-get install -y git
+  append_final:
+    - RUN ansible-galaxy collection install community.general community.docker ansible.posix
