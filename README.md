@@ -20,3 +20,5 @@ This Ansbile collection is intended to be used in order to setup:
 
 * tox -e unit-py3.12-2.17 --ansible --conf tox-ansible.ini -- junit-xml=tests/reports/unit.xml
 * tox -e integration-py3.12-2.17 --ansible --conf tox-ansible.ini -- junit-xml=tests/reports/integration.xml
+
+## Testing Auto-Release
