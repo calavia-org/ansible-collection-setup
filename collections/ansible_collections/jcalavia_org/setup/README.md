@@ -32,7 +32,18 @@ collections:
     version: 1.0.0
 ```
 
+## Included Playbooks
+
+| Playbook | Description |
+|----------|-------------|
+| [`full_macos_setup`](./playbooks/full_macos_setup.yml) | Full macOS development environment with GPG keys and mise tools |
+| [`dev_machine`](./playbooks/dev_machine.yaml) | Basic multi-host development machine setup |
+
+See the [playbooks documentation](./playbooks/README.md) for details.
+
 ## Usage
+
+### Using Roles Directly
 
 ```yaml
 - hosts: all
@@ -44,6 +55,16 @@ collections:
     - role: nvim
     - role: opencode
     - role: mise
+```
+
+### Using a Playbook
+
+```bash
+# Full macOS setup (run locally)
+ansible-playbook jcalavia_org.setup.full_macos_setup
+
+# Basic setup on remote hosts
+ansible-playbook -i inventory jcalavia_org.setup.dev_machine
 ```
 
 ## License
