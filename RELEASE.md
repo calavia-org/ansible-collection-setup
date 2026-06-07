@@ -1,8 +1,8 @@
-# Release Guide
+# Release Guide: Ansible Collection Setup
 
-Releases for this collection are automated via `.github/workflows/release.yml`.
+This document describes how to release new versions of the `ansible-collection-setup` repository.
 
-## How It Works
+## What This Repository Is
 
 When a PR with a conventional commit title is merged to `main`:
 
@@ -30,7 +30,7 @@ This repo follows **Semantic Versioning** derived from conventional commits:
 | `feat:` | Minor (`1.1.2` → `1.2.0`) | New feature or role |
 | `feat!:` or `BREAKING CHANGE:` | Major (`1.1.2` → `2.0.0`) | Breaking change |
 | `chore:` / `docs:` / `refactor:` | Patch (minor) | Non-functional change |
-| `doc:` | None | Documentation only |
+| `doc:` | None | Documentation only
 
 ## Release Steps
 
@@ -64,13 +64,18 @@ To release a patch for an older major version (e.g. `v1.x` while `main` is at `v
    ```
 2. Cherry-pick or apply the fix with a conventional commit (e.g. `fix:`)
 3. Open a PR targeting `release/v1.x`
-4. The workflow bumps based on tags on that branch and publishes a patch release
+4. The reusable workflow will bump based on tags on `release/v1.x`, not `main`
 
 Target branches allowed for PRs: `main`, `release/*`.
 
 ## Post-Release Checklist
 
-After the workflow completes, verify:
+| Issue | Check |
+|-------|-------|
+| Release didn't trigger | Did `galaxy.yml` change in the push to `main`? |
+| EE image push failed | Is `--container-runtime docker` set in `ansible-builder build`? |
+| Galaxy publish failed | Is `ANSIBLE_GALAXY_API_KEY` secret configured? |
+| Version bump didn't happen | Was the PR from a branch matching the allowed pattern? |
 
 - [ ] `galaxy.yml` version matches the GitHub Release tag
 - [ ] Collection is available on Ansible Galaxy (`jcalavia_org.setup`)

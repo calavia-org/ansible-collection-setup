@@ -12,10 +12,10 @@ jobs:
   pr-check-and-bump:
     uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-bump.yml@v0
     with:
-      allowed-branch-pattern: ""
+      allowed-branch-pattern: "^(major|feat|fix|doc)/.+"
       allowed-target-branches: "main,release/*"
       version-file: "collections/ansible_collections/jcalavia_org/setup/galaxy.yml"
-      fail-on-invalid-branch: false
+      fail-on-invalid-branch: true
       require-conventional-commits: true
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
