@@ -213,7 +213,7 @@ jobs:
           python3 -m pip install ansible-builder
 
       - name: Download collection artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: collection-artifact
           path: collections/ansible_collections/jcalavia_org/setup/
@@ -252,7 +252,7 @@ jobs:
           fetch-depth: 0
 
       - name: Download collection artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: collection-artifact
           path: artifacts/
