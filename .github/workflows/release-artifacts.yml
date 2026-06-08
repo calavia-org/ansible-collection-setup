@@ -1,0 +1,44 @@
+name: Release Artifacts
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 1.1.0)'
+        required: true
+        type: string
+  push:
+    branches:
+      - main
+      - 'release/*'
+    paths:
+      - 'collections/ansible_collections/calaviaorg/setup/galaxy.yml'
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    uses: calavia-org/workflows-lib/.github/workflows/release-artifacts.yml@v1
+    with:
+      technology: ansible
+      artifacts: binary,docker
+      version-source: collections/ansible_collections/calaviaorg/setup/galaxy.yml
+      release-name: 'Ansible Collection Setup'
+      publish-github-release: true
+      publish-ghcr: true
+      publish-package-manager: true
+      package-manager: ansible-galaxy
+      ghcr-image-name: ansible-ee-setup
+      ghcr-tags: latest,${{ github.ref_name }}
+      generate-notes: true
+      rollback-on-failure: true
+      notify-on-release: true
+      ansible-collection-path: collections/ansible_collections/calaviaorg/setup
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+      package-token: ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
+      slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
