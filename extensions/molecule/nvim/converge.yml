@@ -2,7 +2,7 @@
 - name: Converge
   hosts: all
   collections:
-    - jcalavia_org.setup
+    - calaviaorg.setup
   tasks:
     - name: "Include setup"
       ansible.builtin.include_role:

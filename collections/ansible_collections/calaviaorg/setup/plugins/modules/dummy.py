@@ -43,16 +43,16 @@ seealso: []
 EXAMPLES = r"""
 # Pass in a message
 - name: Test with a message
-  jcalavia_org.setup.dummy:
+  calaviaorg.setup.dummy:
     name: hello world
 
 # pass in a message and have changed true
 - name: Test with a message and changed output
-  jcalavia_org.setup.dummy:
+  calaviaorg.setup.dummy:
 
 # fail the module
 - name: Test failure of the module
-  jcalavia_org.setup.dummy:
+  calaviaorg.setup.dummy:
 """
 
 RETURN = r"""

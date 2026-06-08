@@ -14,7 +14,7 @@ jobs:
     with:
       allowed-branch-pattern: "^(major|feat|fix|doc)/.+"
       allowed-target-branches: "main,release/*"
-      version-file: "collections/ansible_collections/jcalavia_org/setup/galaxy.yml"
+      version-file: "collections/ansible_collections/calaviaorg/setup/galaxy.yml"
       fail-on-invalid-branch: true
       require-conventional-commits: true
     secrets:

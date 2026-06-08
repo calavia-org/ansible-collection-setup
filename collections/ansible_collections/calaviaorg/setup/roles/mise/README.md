@@ -49,7 +49,7 @@ None.
 ```yaml
 - hosts: all
   collections:
-    - jcalavia_org.setup
+    - calaviaorg.setup
   roles:
     - role: mise
       mise_python_version: '3.11'

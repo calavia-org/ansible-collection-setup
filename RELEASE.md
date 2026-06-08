@@ -78,7 +78,7 @@ Target branches allowed for PRs: `main`, `release/*`.
 | Version bump didn't happen | Was the PR from a branch matching the allowed pattern? |
 
 - [ ] `galaxy.yml` version matches the GitHub Release tag
-- [ ] Collection is available on Ansible Galaxy (`jcalavia_org.setup`)
+- [ ] Collection is available on Ansible Galaxy (`calaviaorg.setup`)
 - [ ] EE image is updated on GHCR (`ghcr.io/calavia-org/ansible-ee-setup:<tag>`)
 - [ ] GitHub Release contains the built collection artifact
 
@@ -106,7 +106,7 @@ Then follow the release workflow steps manually:
 
 ```bash
 ansible-galaxy collection build
-ansible-galaxy collection publish ./jcalavia_org-setup-X.Y.Z.tar.gz
+ansible-galaxy collection publish ./calaviaorg-setup-X.Y.Z.tar.gz
 ansible-builder build --container-runtime docker
 docker push ghcr.io/calavia-org/ansible-ee-setup:X.Y.Z
 ```
