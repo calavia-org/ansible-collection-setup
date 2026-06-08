@@ -1,0 +1,52 @@
+name: PR Check and Test
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+    paths:
+      - collections/ansible_collections/calaviaorg/setup/playbooks/**
+      - collections/ansible_collections/calaviaorg/setup/plugins/**
+      - collections/ansible_collections/calaviaorg/setup/roles/**
+      - tests/**
+      - extensions/molecule/**
+      - galaxy.yml
+      - requirements.yml
+      - tox-ansible.ini
+      - .github/workflows/pr-check-and-test.yml
+      - .pre-commit-config.yaml
+      - pyproject.toml
+      - setup.py
+      - setup.cfg
+      - requirements.txt
+
+jobs:
+  pr-check-and-test:
+    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v1
+    with:
+      technology: auto
+      run-pre-commit: true
+      run-lint: true
+      run-build: false
+      run-tests: true
+      run-unit-tests: true
+      run-integration-tests: true
+      run-e2e-tests: false
+      run-package: false
+      run-publish: false
+      fail-on-missing: false
+      python-version: '3.12'
+      tox-ini: 'tox-ansible.ini'
+      ansible-collection-path: 'collections/ansible_collections/calaviaorg/setup'
+      test-timeout: 30
+      max-parallel: 4
+      fail-fast: false
+      cache-enabled: true
+      report-enabled: true
+      coverage-format: xml
+      coverage-tool: codecov
+      comment-on-pr: true
+      summary-title: 'Ansible Collection CI'
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+      codecov-token: ${{ secrets.CODECOV_TOKEN }}
+      slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
