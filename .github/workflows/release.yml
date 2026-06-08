@@ -1,4 +1,8 @@
-name: Release Collection
+# ⚠️ DEPRECATED: This workflow is superseded by release-artifacts.yml
+# which uses the unified calavia-org/workflows-lib reusable workflow.
+# It is kept temporarily for reference during the migration period.
+# Remove this file after release-artifacts.yml is validated.
+name: Release Collection (deprecated)
 
 concurrency:
   group: release-${{ github.ref }}
