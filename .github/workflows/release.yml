@@ -82,7 +82,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v6.0.1
+        uses: codecov/codecov-action@v7.0.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
@@ -178,7 +178,7 @@ jobs:
 
       - name: Upload collection artifact
         if: steps.check_tag.outputs.skip == 'false'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: collection-artifact
           path: collections/ansible_collections/calaviaorg/setup/calaviaorg-setup-*.tar.gz
@@ -213,7 +213,7 @@ jobs:
           python3 -m pip install ansible-builder
 
       - name: Download collection artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: collection-artifact
           path: collections/ansible_collections/calaviaorg/setup/
@@ -228,7 +228,7 @@ jobs:
             --tag ghcr.io/${{ github.repository_owner }}/ansible-ee-setup:latest
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -252,7 +252,7 @@ jobs:
           fetch-depth: 0
 
       - name: Download collection artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: collection-artifact
           path: artifacts/
@@ -281,7 +281,7 @@ jobs:
           cat RELEASE_NOTES.md | head -30
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: v${{ needs.build.outputs.version }}
           name: Release v${{ needs.build.outputs.version }}
