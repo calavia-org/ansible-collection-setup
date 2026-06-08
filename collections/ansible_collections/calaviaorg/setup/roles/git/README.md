@@ -102,7 +102,7 @@ None.
 ```yaml
 - hosts: all
   collections:
-    - jcalavia_org.setup
+    - calaviaorg.setup
   roles:
     - role: git
       git_skip_configure: false

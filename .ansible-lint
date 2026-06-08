@@ -2,7 +2,7 @@
 offline: true
 exclude_paths:
   - .tox
-  - collections/ansible_collections/jcalavia_org/setup/playbooks/
+  - collections/ansible_collections/calaviaorg/setup/playbooks/
 skip_list:
   - fqcn[keyword]
   - command-instead-of-module

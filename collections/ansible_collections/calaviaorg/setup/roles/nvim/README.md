@@ -103,7 +103,7 @@ nvim_treesitter_languages:
 ```yaml
 - hosts: all
   collections:
-    - jcalavia_org.setup
+    - calaviaorg.setup
   roles:
     - role: nvim
       nvim_skip_configure: false
@@ -119,7 +119,7 @@ Minimal (no plugins):
 ```yaml
 - hosts: all
   collections:
-    - jcalavia_org.setup
+    - calaviaorg.setup
   roles:
     - role: nvim
       nvim_plugin_cmp: false

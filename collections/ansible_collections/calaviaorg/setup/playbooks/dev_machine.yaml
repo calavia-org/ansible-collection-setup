@@ -1,0 +1,7 @@
+- name: 'Setup Development machine'
+  hosts: all
+  roles:
+    - { role: calaviaorg.setup.git }
+    - { role: calaviaorg.setup.nvim }
+    - { role: calaviaorg.setup.tmux }
+    - { role: calaviaorg.setup.opencode }

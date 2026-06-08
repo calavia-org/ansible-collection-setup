@@ -1,4 +1,4 @@
-# Playbooks — jcalavia_org.setup
+# Playbooks — calaviaorg.setup
 
 This collection provides two playbooks for setting up development environments.
 
@@ -28,7 +28,7 @@ Installs git, Neovim, tmux, and OpenCode on one or more remote hosts. Suitable f
 ### Usage
 
 ```bash
-ansible-playbook -i inventory jcalavia_org.setup.dev_machine
+ansible-playbook -i inventory calaviaorg.setup.dev_machine
 ```
 
 ### Playbook Content
@@ -36,10 +36,10 @@ ansible-playbook -i inventory jcalavia_org.setup.dev_machine
 ```yaml
 - hosts: all
   roles:
-    - jcalavia_org.setup.git
-    - jcalavia_org.setup.nvim
-    - jcalavia_org.setup.tmux
-    - jcalavia_org.setup.opencode
+    - calaviaorg.setup.git
+    - calaviaorg.setup.nvim
+    - calaviaorg.setup.tmux
+    - calaviaorg.setup.opencode
 ```
 
 ### Variables
@@ -66,7 +66,7 @@ Configures a local macOS machine with the full development toolchain: git identi
 ### Usage
 
 ```bash
-ansible-playbook jcalavia_org.setup.full_macos_setup
+ansible-playbook calaviaorg.setup.full_macos_setup
 ```
 
 ### Playbook Variables
@@ -104,7 +104,7 @@ roles:
 
 ```yaml
 # playbook override example: custom GPG key and Java version
-ansible-playbook jcalavia_org.setup.full_macos_setup \
+ansible-playbook calaviaorg.setup.full_macos_setup \
   -e gpg_key_real_name="Your Name" \
   -e gpg_key_email="you@example.com" \
   -e mise_java_version="openjdk-21"
