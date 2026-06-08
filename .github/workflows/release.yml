@@ -178,7 +178,7 @@ jobs:
 
       - name: Upload collection artifact
         if: steps.check_tag.outputs.skip == 'false'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: collection-artifact
           path: collections/ansible_collections/jcalavia_org/setup/jcalavia_org-setup-*.tar.gz
