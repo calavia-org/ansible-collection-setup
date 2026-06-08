@@ -1,5 +1,9 @@
+# ⚠️ DEPRECATED: This workflow is superseded by pr-check-and-test.yml
+# which uses the unified calavia-org/workflows-lib reusable workflow.
+# It is kept temporarily for reference during the migration period.
+# Remove this file after pr-check-and-test.yml is validated.
 ---
-name: pre-commit
+name: pre-commit (deprecated)
 
 on:
   pull_request:
