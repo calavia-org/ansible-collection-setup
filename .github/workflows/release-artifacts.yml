@@ -22,7 +22,7 @@ permissions:
 
 jobs:
   release:
-    uses: calavia-org/workflows-lib/.github/workflows/release-artifacts.yml@v1
+    uses: calavia-org/workflows-lib/.github/workflows/release-artifacts.yml@v0
     with:
       technology: ansible
       artifacts: binary,docker
