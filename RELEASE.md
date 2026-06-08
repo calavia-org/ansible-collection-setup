@@ -29,7 +29,7 @@ This repo follows **Semantic Versioning** derived from conventional commits:
 | `fix:` | Patch (`1.1.2` → `1.1.3`) | Bug fix |
 | `feat:` | Minor (`1.1.2` → `1.2.0`) | New feature or role |
 | `feat!:` or `BREAKING CHANGE:` | Major (`1.1.2` → `2.0.0`) | Breaking change |
-| `chore:` / `docs:` / `refactor:` | Patch (minor) | Non-functional change |
+| `chore:` / `docs:` / `refactor:` | **None** | Non-functional change (checks still run) |
 | `doc:` | None | Documentation only
 
 ## Release Steps
@@ -38,10 +38,10 @@ This repo follows **Semantic Versioning** derived from conventional commits:
 
 The reusable PR workflow handles this automatically:
 
-1. Checks the branch name against the allowed pattern (`^(major|feat|fix|doc)/.+`)
+1. Checks the branch name against the allowed pattern (`^(major|feat|fix|doc|chore)/.+`)
 2. Parses conventional commits in the PR to determine bump type
-3. Bumps `galaxy.yml` version using `bump-version-action`
-4. Commits the version bump back to the PR branch
+3. For `chore/` branches: runs all checks but **skips** the version bump (handled by the centralized reusable workflow)
+4. For other branches: bumps `galaxy.yml` version using `bump-version-action` and commits back to the PR branch
 
 ### 2. Collection Build and Publish (Automatic on Merge)
 
@@ -75,7 +75,7 @@ Target branches allowed for PRs: `main`, `release/*`.
 | Release didn't trigger | Did `galaxy.yml` change in the push to `main`? |
 | EE image push failed | Is `--container-runtime docker` set in `ansible-builder build`? |
 | Galaxy publish failed | Is `ANSIBLE_GALAXY_API_KEY` secret configured? |
-| Version bump didn't happen | Was the PR from a branch matching the allowed pattern? |
+| Version bump didn't happen | Was the PR from a branch matching the allowed pattern? `chore/` branches intentionally skip the bump. |
 
 - [ ] `galaxy.yml` version matches the GitHub Release tag
 - [ ] Collection is available on Ansible Galaxy (`calaviaorg.setup`)
@@ -89,7 +89,7 @@ Target branches allowed for PRs: `main`, `release/*`.
 | Release didn't trigger | Did `galaxy.yml` change in the push to `main`? |
 | EE image push failed | Is `--container-runtime docker` set in `ansible-builder build`? |
 | Galaxy publish failed | Is `ANSIBLE_GALAXY_API_KEY` secret configured? |
-| Version bump didn't happen | Was the PR from a branch matching the allowed pattern? |
+| Version bump didn't happen | Was the PR from a branch matching the allowed pattern? `chore/` branches intentionally skip the bump. |
 
 ## Manual Release (Emergency)
 
