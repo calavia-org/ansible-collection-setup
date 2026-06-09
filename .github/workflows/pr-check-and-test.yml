@@ -21,7 +21,7 @@ on:
 
 jobs:
   pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v1
+    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v0
     with:
       technology: auto
       run-pre-commit: true
