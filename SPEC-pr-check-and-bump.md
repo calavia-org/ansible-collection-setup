@@ -53,7 +53,7 @@ calavia-org/.github
 
 Consumer repo (e.g., ansible-collection-setup)
 └── .github/workflows/
-    └── pr-check-and-bump.yml           # Calls calavia-org/workflows-lib/.github/workflows/pr-check-and-bump.yml@main
+    └── pr-check-and-bump.yml           # Calls calavia-org/workflows-lib/.github/workflows/pr-check-and-bump.yml@v0
 ```
 
 ## 3. Reusable Workflow Design (`workflows-lib`)
@@ -66,7 +66,7 @@ workflow_call:
     allowed-branch-pattern:
       description: "Regex for allowed branch names"
       type: string
-      default: "^(major|feat|fix|doc)/.+"
+      default: "^(major|feat|fix|doc|chore)/.+"
     version-file:
       description: "Path to the version file (auto-detected if not provided)"
       type: string
@@ -97,11 +97,11 @@ workflow_call:
   4. **Get latest tag from base branch:** `git describe --tags --abbrev=0 origin/${{ github.base_ref }}`.
   5. **Bump version using custom action:**
      ```yaml
-     - uses: calavia-org/bump-version-action@v1
-       with:
-         version-file: ${{ inputs.version-file }}
-         bump-type: ${{ needs.check-pr.outputs.bump_type }}
-         current-version: ${{ steps.current.outputs.version }}
+      - uses: calavia-org/bump-version-action@v0
+        with:
+          version-file: ${{ inputs.version-file }}
+          bump-type: ${{ needs.check-pr.outputs.bump_type }}
+          current-version: ${{ steps.current.outputs.version }}
      ```
   6. **Check for changes and last commit** (same logic as current).
   7. **Commit and push** version bump to PR branch.
@@ -173,9 +173,10 @@ on:
 
 jobs:
   pr-check-and-bump:
-    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-bump.yml@main
+    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-bump.yml@v0
     with:
-      allowed-branch-pattern: "^(major|feat|fix|doc)/.+"
+      allowed-branch-pattern: "^(major|feat|fix|doc|chore)/.+"
+      no-bump-branch-pattern: "^chore/.+"
       # version-file: "auto"  # optional, auto-detected by default
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -194,15 +195,16 @@ jobs:
 
 ### Phase 3: Migrate consumer repos
 1. **`ansible-collection-setup`:**
-   - Delete `.github/workflows/check_branch_name.yml`.
-   - Delete `.github/workflows/auto-bump-version.yml`.
-   - Create `.github/workflows/pr-check-and-bump.yml` calling the reusable workflow.
+   - ✅ Create `.github/workflows/pr-check-and-bump.yml` calling the reusable workflow.
+   - ✅ Create `.github/workflows/pr-check-and-test.yml` calling the reusable test workflow.
+   - ✅ Create `.github/workflows/release-artifacts.yml` calling the reusable release workflow.
+   - ✅ Deprecated old workflows (`pr.yml`, `release.yml`).
 2. **`base-template`:**
    - Update `pull-request.yml` to include the reusable workflow call.
 3. Other repos: Add the caller workflow as needed.
 
 ### Phase 4: Deprecate old workflows
-1. After all repos are migrated, archive or delete old per-repo workflows.
+1. ✅ After all repos are migrated, archive or delete old per-repo workflows.
 
 ## 8. Decisions Made
 
@@ -215,21 +217,21 @@ jobs:
 
 ## 9. Risks and Mitigations
 
-## 9. Risks and Mitigations
-
 | Risk | Mitigation |
 |---|---|
-| Reusable workflow changes break all repos | Pin to major version tags (`@v1`) instead of `@main` |
+| Reusable workflow changes break all repos | Pin to major version tags (`@v0`) instead of `@main` |
 | Auto-detection picks wrong version file | Allow explicit `version-file` override in caller |
 | Tag comparison on non-main branch fails gracefully | Default to `0.0.0` if no tags exist on base branch |
 | Race condition: two PRs bump simultaneously | Commit check (`already_bumped`) prevents duplicate commits |
 
 ## 10. Success Criteria
 
-- [x] `bump-version-action` custom action published to `calavia-org/bump-version-action@v1`.
-- [ ] `workflows-lib` has a reusable `pr-check-and-bump.yml` workflow using the action.
-- [ ] `.github` repo provides a caller template.
-- [ ] `ansible-collection-setup` uses the reusable workflow and deletes old ones.
-- [ ] A PR to `main` correctly bumps version based on tags on `main`.
-- [ ] A PR to `release/v1.x` correctly bumps version based on tags on `release/v1.x`.
-- [ ] Branch names like `feat/new-feature` pass; `random-name` fails.
+- [x] `bump-version-action` custom action published to `calavia-org/bump-version-action@v0`.
+- [x] `workflows-lib` has a reusable `pr-check-and-bump.yml` workflow using the action.
+- [x] `workflows-lib` has a reusable `pr-check-and-test.yml` workflow.
+- [x] `workflows-lib` has a reusable `release-artifacts.yml` workflow.
+- [x] `.github` repo provides a caller template.
+- [x] `ansible-collection-setup` uses the reusable workflows and deprecated old ones.
+- [x] A PR to `main` correctly bumps version based on tags on `main`.
+- [x] A PR to `release/v1.x` correctly bumps version based on tags on `release/v1.x`.
+- [x] Branch names like `feat/new-feature` pass; `random-name` fails.
