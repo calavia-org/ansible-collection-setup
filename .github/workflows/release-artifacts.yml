@@ -25,7 +25,7 @@ jobs:
     uses: calavia-org/workflows-lib/.github/workflows/release-artifacts.yml@v0
     with:
       technology: ansible
-      artifacts: binary,docker
+      artifacts: binary,execution-environment
       version-source: collections/ansible_collections/calaviaorg/setup/galaxy.yml
       release-name: 'Ansible Collection Setup'
       publish-github-release: true
@@ -38,7 +38,6 @@ jobs:
       rollback-on-failure: true
       notify-on-release: true
       ansible-collection-path: collections/ansible_collections/calaviaorg/setup
-      is-ansible-ee: true
       ee-definition-file: execution-environment.yml
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
