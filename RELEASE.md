@@ -6,8 +6,8 @@ This document describes how to release new versions of the `ansible-collection-s
 
 When a PR with a conventional commit title is merged to `main`:
 
-1. The release workflow triggers (`Release Collection`)
-2. It bumps the collection version in `galaxy.yml` based on commit types
+1. The PR workflow auto-bumps the collection version in `galaxy.yml` (if not a `chore/` branch)
+2. The release workflow triggers on push to `main` when `galaxy.yml` changes
 3. Builds and publishes the collection tarball to Ansible Galaxy
 4. Builds the execution environment (EE) image and pushes it to GHCR
 5. Creates a GitHub Release with artifacts and release notes
@@ -17,7 +17,7 @@ When a PR with a conventional commit title is merged to `main`:
 
 | Dependency | Repository | Purpose | Release Method |
 |------------|------------|---------|----------------|
-| PR validation | [`calavia-org/workflows-lib`](https://github.com/calavia-org/workflows-lib) | Reusable workflow for branch check and version bump | Manual tags (see its RELEASE.md) |
+| PR validation + test | [`calavia-org/workflows-lib`](https://github.com/calavia-org/workflows-lib) | Reusable workflows for branch check, version bump, lint, test | Manual tags (`v0`) |
 | Version bump | [`calavia-org/bump-version-action`](https://github.com/calavia-org/bump-version-action) | Composite action used inside the reusable workflow | Automated on push to main via its own release workflow |
 
 ## Versioning
@@ -30,29 +30,35 @@ This repo follows **Semantic Versioning** derived from conventional commits:
 | `feat:` | Minor (`1.1.2` → `1.2.0`) | New feature or role |
 | `feat!:` or `BREAKING CHANGE:` | Major (`1.1.2` → `2.0.0`) | Breaking change |
 | `chore:` / `docs:` / `refactor:` | **None** | Non-functional change (checks still run) |
-| `doc:` | None | Documentation only
+| `doc:` | None | Documentation only |
 
-## Release Steps
+## Workflows
 
-### 1. Version Bump (Automatic via PR)
+### PR Check and Auto-Bump
 
-The reusable PR workflow handles this automatically:
+[`pr-check-and-bump.yml`](.github/workflows/pr-check-and-bump.yml) — calls `calavia-org/workflows-lib/.github/workflows/pr-check-and-bump.yml@v0`:
 
-1. Checks the branch name against the allowed pattern (`^(major|feat|fix|doc|chore)/.+`)
-2. Parses conventional commits in the PR to determine bump type
-3. For `chore/` branches: runs all checks but **skips** the version bump (handled by the centralized reusable workflow)
-4. For other branches: bumps `galaxy.yml` version using `bump-version-action` and commits back to the PR branch
+1. Validates branch name against `^(major|feat|fix|doc|chore)/.+`
+2. Parses conventional commits for bump type
+3. For `chore/` branches: skips the version bump
+4. For other branches: auto-bumps `galaxy.yml` version
 
-### 2. Collection Build and Publish (Automatic on Merge)
+### PR Check and Test
 
-The [`.github/workflows/release.yml`](.github/workflows/release.yml) workflow runs on push to `main` and:
+[`pr-check-and-test.yml`](.github/workflows/pr-check-and-test.yml) — calls `calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v0`:
 
-1. Runs sanity, unit, and integration tests
-2. Builds the collection tarball with `ansible-galaxy collection build`
-3. Publishes to Ansible Galaxy via `ansible-galaxy collection publish`
-4. Builds the execution environment image with `ansible-builder build`
-5. Pushes the EE image to GHCR (`ghcr.io/calavia-org/ansible-ee-setup:<version>`)
-6. Creates a GitHub Release with changelog and the built artifact
+- Detects technology, runs lint, tests, and coverage
+- Skips build/publish steps (those happen on merge)
+
+### Release Artifacts
+
+[`release-artifacts.yml`](.github/workflows/release-artifacts.yml) — calls `calavia-org/workflows-lib/.github/workflows/release-artifacts.yml@v0`:
+
+1. Detects version from `galaxy.yml`
+2. Builds collection tarball
+3. Publishes to Ansible Galaxy
+4. Builds EE image and pushes to GHCR
+5. Creates GitHub Release
 
 ## Maintenance Releases
 
@@ -70,13 +76,6 @@ Target branches allowed for PRs: `main`, `release/*`.
 
 ## Post-Release Checklist
 
-| Issue | Check |
-|-------|-------|
-| Release didn't trigger | Did `galaxy.yml` change in the push to `main`? |
-| EE image push failed | Is `--container-runtime docker` set in `ansible-builder build`? |
-| Galaxy publish failed | Is `ANSIBLE_GALAXY_API_KEY` secret configured? |
-| Version bump didn't happen | Was the PR from a branch matching the allowed pattern? `chore/` branches intentionally skip the bump. |
-
 - [ ] `galaxy.yml` version matches the GitHub Release tag
 - [ ] Collection is available on Ansible Galaxy (`calaviaorg.setup`)
 - [ ] EE image is updated on GHCR (`ghcr.io/calavia-org/ansible-ee-setup:<tag>`)
@@ -87,7 +86,7 @@ Target branches allowed for PRs: `main`, `release/*`.
 | Issue | Check |
 |-------|-------|
 | Release didn't trigger | Did `galaxy.yml` change in the push to `main`? |
-| EE image push failed | Is `--container-runtime docker` set in `ansible-builder build`? |
+| EE image push failed | Is `ansible-builder` configured with `--container-runtime docker`? |
 | Galaxy publish failed | Is `ANSIBLE_GALAXY_API_KEY` secret configured? |
 | Version bump didn't happen | Was the PR from a branch matching the allowed pattern? `chore/` branches intentionally skip the bump. |
 
@@ -105,6 +104,7 @@ git push origin vX.Y.Z
 Then follow the release workflow steps manually:
 
 ```bash
+cd collections/ansible_collections/calaviaorg/setup
 ansible-galaxy collection build
 ansible-galaxy collection publish ./calaviaorg-setup-X.Y.Z.tar.gz
 ansible-builder build --container-runtime docker

@@ -21,8 +21,16 @@ git clone https://github.com/calavia-org/ansible-collection-setup.git
 cd ansible-collection-setup
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-tox -e unit-py3.12-2.17 --ansible --conf tox-ansible.ini
+tox -e unit-py3.12-milestone --ansible --conf tox-ansible.ini
 ```
+
+## CI / Workflows
+
+| Workflow | Purpose | Status |
+|----------|---------|--------|
+| [`pr-check-and-bump`](.github/workflows/pr-check-and-bump.yml) | Validate branch name, conventional commits, auto-bump version | Active |
+| [`pr-check-and-test`](.github/workflows/pr-check-and-test.yml) | Lint, test, build (reusable from `calavia-org/workflows-lib`) | Active |
+| [`release-artifacts`](.github/workflows/release-artifacts.yml) | Build and publish collection + EE image on merge | Active |
 
 ## Supported Platforms
 
