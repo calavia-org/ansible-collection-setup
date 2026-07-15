@@ -8,6 +8,7 @@ coverage.*
 .pytest_cache
 .tox/
 .venv/
+.omo/
 
 # Directories
 **/__pycache__
