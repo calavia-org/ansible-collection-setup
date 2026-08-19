@@ -4,17 +4,21 @@ dependency:
   options:
     requirements-file: requirements.yml
 driver:
-  name: default
+  name: docker
 platforms:
   - name: instance
+    image: "geerlingguy/docker-debian12-ansible:latest"
+    pre_build_image: true
 provisioner:
   name: ansible
+  config_options:
+    defaults:
+      interpreter_python: auto_silent
   env:
     MOLECULE_PROJECT_DIRECTORY: "extensions/molecule/opencode"
   inventory:
     group_vars:
       all:
-        ansible_connection: local
         opencode_skip_configure: true
 verifier:
   name: ansible

@@ -10,6 +10,9 @@ galaxy_info:
     - name: Ubuntu
       versions:
         - focal
+    - name: Debian
+      versions:
+        - bookworm
 
   galaxy_tags:
     - dev

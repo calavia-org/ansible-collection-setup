@@ -19,34 +19,33 @@ on:
       - setup.cfg
       - requirements.txt
 
+permissions:
+  contents: read
+
 jobs:
-  pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v0
-    with:
-      technology: auto
-      run-pre-commit: true
-      run-lint: true
-      run-build: false
-      run-tests: true
-      run-unit-tests: true
-      run-integration-tests: true
-      run-e2e-tests: false
-      run-package: false
-      run-publish: false
-      fail-on-missing: false
-      python-version: '3.12'
-      tox-ini: 'tox-ansible.ini'
-      ansible-collection-path: 'collections/ansible_collections/calaviaorg/setup'
-      test-timeout: 30
-      max-parallel: 4
-      fail-fast: false
-      cache-enabled: true
-      report-enabled: true
-      coverage-format: xml
-      coverage-tool: codecov
-      comment-on-pr: true
-      summary-title: 'Ansible Collection CI'
-    secrets:
-      github-token: ${{ secrets.GITHUB_TOKEN }}
-      codecov-token: ${{ secrets.CODECOV_TOKEN }}
-      slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install tox-ansible
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.1
+      - name: Run lint checks
+        run: |
+          ansible-lint
+          yamllint -c .yamllint .
+      - name: Run unit tests
+        run: tox -e unit-py3.12-2.17 --ansible --conf tox-ansible.ini
+      - name: Run integration tests
+        run: tox -e integration-py3.12-milestone --ansible --conf tox-ansible.ini
