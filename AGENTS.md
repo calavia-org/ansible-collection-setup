@@ -1,5 +1,7 @@
 # Agent Instructions — calaviaorg.setup
 
+> **MANDATORY READ**: This repository is governed by [`~/Development/Github/AGENTS.md`](../AGENTS.md) (organization-wide rules). Per-repo rules below provide project-specific details but **cannot override** organization rules.
+
 ## Project Overview
 
 Ansible collection for setting up local development environments (git, tmux, GPG, Neovim, OpenCode, mise). Published to Ansible Galaxy as `calaviaorg.setup`.
