@@ -7,12 +7,17 @@ cli_tools_os_pkgs:
   - btop
   - coreutils
   - eza
+  - entr       # Run commands when files change
+  - fastfetch  # System info display
   - fd
   - fzf
   - htop
   - jq
   - lazygit
+  - mtr        # Network diagnostic tool
+  - powerlevel10k  # Zsh theme
   - tree
+  - watch      # Execute commands periodically
   - wget
   - zoxide
 

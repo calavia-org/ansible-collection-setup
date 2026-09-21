@@ -26,12 +26,17 @@ cli_tools_os_pkgs:
   - btop       # Resource monitor
   - coreutils  # GNU core utilities
   - eza        # Modern ls replacement
+  - entr       # Run commands when files change
+  - fastfetch  # System info display
   - fd         # Fast find alternative
   - fzf        # Fuzzy finder
   - htop       # Process viewer
   - jq         # JSON processor
   - lazygit    # TUI for git
+  - mtr        # Network diagnostic tool
+  - powerlevel10k  # Zsh theme
   - tree       # Directory tree viewer
+  - watch      # Execute commands periodically
   - wget       # File downloader
   - zoxide     # Smarter cd command
 ```

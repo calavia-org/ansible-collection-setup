@@ -15,7 +15,7 @@ Ansible collection for setting up local development environments (git, tmux, GPG
 | Editor | neovim + plugins | ansible role |
 | AI Agent | opencode + engram plugin | ansible role |
 | GPG | gnupg, pinentry-mac | ansible role |
-| CLI Tools | bat, btop, eza, fd, fzf, htop, jq, lazygit, tree, wget, zoxide | ansible role |
+| CLI Tools | bat, btop, eza, entr, fastfetch, fd, fzf, htop, jq, lazygit, mtr, powerlevel10k, tree, watch, wget, zoxide | ansible role |
 | Languages | python, node, go, java | **mise** (not ansible directly) |
 | Containerization | docker, docker-compose, docker-desktop | **manual install** |
 | Terminal Emulator | ghostty | **manual install** |
