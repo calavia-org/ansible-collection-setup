@@ -95,28 +95,32 @@ yamllint -c .yamllint .
 
 ### Pre-Push Checklist
 
-Before creating a PR or pushing commits:
+Before creating a PR or pushing commits, run these in order:
 
 ```bash
 # 1. Ensure venv is active
 source .venv/bin/activate
 
-# 2. Run linting
+# 2. Run linting (MANDATORY — will fail CI if skipped)
 ruff format . && ruff check . --fix
 pre-commit run --all-files
 
-# 3. Run unit tests
+# 3. Run unit tests (MANDATORY)
 tox -e unit-py3.12-2.17 --ansible --conf tox-ansible.ini
 
-# 4. Run sanity tests
+# 4. Run sanity tests (MANDATORY)
 tox -e sanity-py3.12-milestone --ansible --conf tox-ansible.ini
 
-# 5. Test affected role(s) with molecule
+# 5. Test affected role(s) with molecule (REQUIRES Docker Desktop)
 molecule test -s <role_name>
+# ⚠️  Molecule requires Docker Desktop to be running. If Docker is unavailable,
+#    ensure the role's YAML is valid and the logic is reviewed manually.
 
 # 6. Verify collection builds
 ansible-galaxy collection build
 ```
+
+**Minimum required before push**: Steps 1-4 and 6. Step 5 (molecule) is required only if Docker is available; if not, note it in the PR description.
 
 ### Unit Tests
 
