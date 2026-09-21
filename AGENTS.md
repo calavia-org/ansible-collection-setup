@@ -120,14 +120,16 @@ tox -e unit-py3.12-2.17 --ansible --conf tox-ansible.ini
 # 4. Run sanity tests (MANDATORY)
 tox -e sanity-py3.12-milestone --ansible --conf tox-ansible.ini
 
-# 5. Run integration tests (MANDATORY — requires Docker Desktop)
-tox -e integration-py3.12-milestone --ansible --conf tox-ansible.ini
+# 5. Test affected role(s) with tox (MANDATORY — requires Docker Desktop)
+#    Only test roles you modified. Full suite runs in CI.
+tox -e integration-py3.12-milestone --ansible --conf tox-ansible.ini -- -k "<role_name>"
 
 # 6. Verify collection builds
 ansible-galaxy collection build
 ```
 
 **ALL steps are mandatory.** If Docker Desktop is not running, start it before step 5.
+**Step 5**: Test only modified roles locally using `-k` filter. CI runs the full integration suite.
 
 ### Unit Tests
 
