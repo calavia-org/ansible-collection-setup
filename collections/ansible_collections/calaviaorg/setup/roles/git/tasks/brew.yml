@@ -1,5 +1,5 @@
 ---
-- name: 'Installing git with homebrew'
+- name: 'Installing git packages with homebrew'
   community.general.homebrew:
-    name: git
+    name: '{{ git_os_pkgs }}'
     state: present

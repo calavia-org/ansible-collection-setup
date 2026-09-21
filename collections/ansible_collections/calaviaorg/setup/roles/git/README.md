@@ -24,6 +24,13 @@ Install and configure git with LFS support, user identity, aliases, protocol map
 | `git_lfs_enable` | `false` | Install git LFS extension |
 | `git_lfs_os_pkgs` | `[git-lfs]` | LFS OS packages to install |
 
+### GitHub CLI
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `git_gh_enable` | `false` | Install GitHub CLI (`gh`) |
+| `git_gh_os_pkgs` | `[gh]` | GitHub CLI OS packages to install |
+
 ### Configuration
 
 | Variable | Default | Description |

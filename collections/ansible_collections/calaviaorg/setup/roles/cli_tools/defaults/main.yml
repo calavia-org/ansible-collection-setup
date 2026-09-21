@@ -1,0 +1,19 @@
+---
+cli_tools_installer: pkg
+cli_tools_privilege_escalation: true
+
+cli_tools_os_pkgs:
+  - bat
+  - btop
+  - coreutils
+  - eza
+  - fd
+  - fzf
+  - htop
+  - jq
+  - lazygit
+  - tree
+  - wget
+  - zoxide
+
+cli_tools_skip_install: false
