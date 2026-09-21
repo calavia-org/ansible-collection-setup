@@ -93,6 +93,15 @@ yamllint -c .yamllint .
 
 > **⚠️ CRITICAL**: Run ALL tests locally before pushing. CI will reject failing tests.
 
+### HARD RULE: Use Tox Only
+
+**NEVER run molecule directly.** Always use tox, which handles collection building, dependency installation, and environment setup correctly.
+
+| Command | Status |
+|---------|--------|
+| `tox -e <env> --ansible --conf tox-ansible.ini` | ✅ **REQUIRED** |
+| `molecule test -s <role>` | ❌ **FORBIDDEN** — bypasses collection build |
+
 ### Pre-Push Checklist
 
 Before creating a PR or pushing commits, run these in order:
@@ -111,8 +120,8 @@ tox -e unit-py3.12-2.17 --ansible --conf tox-ansible.ini
 # 4. Run sanity tests (MANDATORY)
 tox -e sanity-py3.12-milestone --ansible --conf tox-ansible.ini
 
-# 5. Test affected role(s) with molecule (MANDATORY — requires Docker Desktop)
-molecule test -s <role_name>
+# 5. Run integration tests (MANDATORY — requires Docker Desktop)
+tox -e integration-py3.12-milestone --ansible --conf tox-ansible.ini
 
 # 6. Verify collection builds
 ansible-galaxy collection build
@@ -132,17 +141,17 @@ tox -e unit-py3.12-2.17 --ansible --conf tox-ansible.ini
 tox -e sanity-py3.12-milestone --ansible --conf tox-ansible.ini
 ```
 
-### Molecule (Integration Tests)
+### Integration Tests (via Tox)
 
 ```bash
-# Run molecule for a specific role
-molecule test -s <role_name>
+# Run integration tests for all roles
+tox -e integration-py3.12-milestone --ansible --conf tox-ansible.ini
 
-# Available scenarios: darwin, git, gpg, mise, nvim, opencode, tmux, cli_tools
-molecule test -s git
+# List all available tox environments
+tox --ansible -l --conf tox-ansible.ini
 ```
 
-**Important**: Molecule tests build and install the collection from a git archive. The collection must be buildable before molecule tests work.
+**Important**: Tox builds and installs the collection from a git archive before running tests. The collection must be buildable.
 
 ## Mise Usage
 
