@@ -111,16 +111,14 @@ tox -e unit-py3.12-2.17 --ansible --conf tox-ansible.ini
 # 4. Run sanity tests (MANDATORY)
 tox -e sanity-py3.12-milestone --ansible --conf tox-ansible.ini
 
-# 5. Test affected role(s) with molecule (REQUIRES Docker Desktop)
+# 5. Test affected role(s) with molecule (MANDATORY — requires Docker Desktop)
 molecule test -s <role_name>
-# ⚠️  Molecule requires Docker Desktop to be running. If Docker is unavailable,
-#    ensure the role's YAML is valid and the logic is reviewed manually.
 
 # 6. Verify collection builds
 ansible-galaxy collection build
 ```
 
-**Minimum required before push**: Steps 1-4 and 6. Step 5 (molecule) is required only if Docker is available; if not, note it in the PR description.
+**ALL steps are mandatory.** If Docker Desktop is not running, start it before step 5.
 
 ### Unit Tests
 
