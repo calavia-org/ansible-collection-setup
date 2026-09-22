@@ -1,0 +1,19 @@
+---
+cli_tools_installer: pkg
+
+# Debian 12 (bookworm) apt-available subset of cli_tools.
+# Excluded (not in bookworm repos): eza, fastfetch, lazygit, powerlevel10k, zoxide.
+# Renamed: fd-find (binary: fdfind), procps (provides watch).
+cli_tools_os_pkgs:
+  - bat
+  - btop
+  - coreutils
+  - entr       # Run commands when files change
+  - fd-find
+  - fzf
+  - htop
+  - jq
+  - mtr        # Network diagnostic tool
+  - procps     # Provides watch
+  - tree
+  - wget

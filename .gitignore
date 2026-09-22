@@ -17,3 +17,9 @@ test/reports
 .ansible/
 .vscode/
 .devcontainer/
+
+# OpenCode/OMO local state
+.omo/
+
+# Galaxy collection build artifacts
+*.tar.gz
