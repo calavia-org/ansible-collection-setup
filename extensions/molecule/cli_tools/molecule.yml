@@ -10,16 +10,14 @@ platforms:
 provisioner:
   name: ansible
   env:
-    MOLECULE_PROJECT_DIRECTORY: "extensions/molecule/git"
+    MOLECULE_PROJECT_DIRECTORY: "extensions/molecule/cli_tools"
   config_options:
     defaults:
       interpreter_python: auto_silent
   inventory:
     group_vars:
       all:
-        git_skip_configure: false
-        git_privilege_escalation: false
-        git_user_name: 'Molecule Test'
-        git_user_email: 'molecule@test.local'
+        cli_tools_privilege_escalation: false
+        cli_tools_skip_install: false
 verifier:
   name: ansible
