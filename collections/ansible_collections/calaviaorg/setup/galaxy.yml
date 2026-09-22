@@ -8,7 +8,7 @@ namespace: calaviaorg
 name: setup
 
 # The version of the collection. Must be compatible with semantic versioning
-version: 1.6.0
+version: 1.7.0
 
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
@@ -58,4 +58,16 @@ issues: https://github.com/calavia-org/ansible-collection-setup/issues
 # artifact. A pattern is matched from the relative path of the file or directory of the collection directory. This
 # uses 'fnmatch' to match the files or directoryes. Some directories and files like 'galaxy.yml', '*.pyc', '*.retry',
 # and '.git' are always filtered
-build_ignore: []
+build_ignore:
+  - .venv
+  - .pytest_cache
+  - .ruff_cache
+  - .ansible
+  - .DS_Store
+  - '*.tar.gz'
+  - .gitignore
+  - .flake8
+  - .yamllint
+  - .pre-commit-config.yaml
+  - bindep.txt
+  - execution-environment.yml

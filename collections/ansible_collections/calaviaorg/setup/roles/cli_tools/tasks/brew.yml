@@ -1,0 +1,5 @@
+---
+- name: 'Installing CLI tools with homebrew'
+  community.general.homebrew:
+    name: '{{ cli_tools_os_pkgs }}'
+    state: present
