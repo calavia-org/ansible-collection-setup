@@ -1,0 +1,20 @@
+galaxy_info:
+  author: Jorge Calavia
+  description: Common CLI tools for development
+  company: calavia-org
+  license: MIT
+  min_ansible_version: '2.15'
+  platforms:
+    - name: MacOSX
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+  galaxy_tags:
+    - cli
+    - tools
+    - development
+    - productivity
+
+dependencies: []

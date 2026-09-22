@@ -1,0 +1,3 @@
+---
+cli_tools_privilege_escalation: false
+cli_tools_installer: brew
