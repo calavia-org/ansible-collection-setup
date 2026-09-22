@@ -13,6 +13,18 @@
 - name: 'Install git'
   ansible.builtin.include_tasks: '{{ git_installer }}.yml'
 
+- name: 'Install git-lfs'
+  ansible.builtin.include_tasks: '{{ git_installer }}.yml'
+  vars:
+    git_os_pkgs: '{{ git_lfs_os_pkgs }}'
+  when: git_lfs_enable | bool
+
+- name: 'Install gh (GitHub CLI)'
+  ansible.builtin.include_tasks: '{{ git_installer }}.yml'
+  vars:
+    git_os_pkgs: '{{ git_gh_os_pkgs }}'
+  when: git_gh_enable | bool
+
 - name: 'Configure git'
   ansible.builtin.include_tasks: configure.yml
   when: not git_skip_configure | bool

@@ -8,10 +8,8 @@
   ansible.builtin.set_fact:
     _opencode_url: >-
       {%- if opencode_version | length > 0 -%}
-      https://github.com/anomalyco/opencode/releases/download/v{{ opencode_version }}/opencode-{{ _opencode_arch }}.tar.gz
-      {%- else -%}
-      https://github.com/anomalyco/opencode/releases/latest/download/opencode-{{ _opencode_arch }}.tar.gz
-      {%- endif -%}
+      https://github.com/anomalyco/opencode/releases/download/v{{ opencode_version }}/opencode-{{ _opencode_arch }}.tar.gz{%- else -%}
+      https://github.com/anomalyco/opencode/releases/latest/download/opencode-{{ _opencode_arch }}.tar.gz{%- endif -%}
 
 - name: 'Download opencode binary'
   ansible.builtin.get_url:

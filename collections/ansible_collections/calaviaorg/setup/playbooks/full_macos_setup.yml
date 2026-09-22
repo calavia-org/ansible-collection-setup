@@ -25,6 +25,9 @@
     mise_node_enable: true
     mise_go_enable: true
 
+    # Enable GitHub CLI
+    git_gh_enable: true
+
   roles:
     - role: git
       git_gpg_sign: true
@@ -37,5 +40,7 @@
     - role: nvim
 
     - role: opencode
+
+    - role: cli_tools
 
     - role: mise
