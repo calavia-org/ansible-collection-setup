@@ -2,6 +2,11 @@
 offline: true
 exclude_paths:
   - .tox
+  - .venv
+  - '**/.venv'
+  - '**/.pytest_cache'
+  - '**/.ruff_cache'
+  - '**/.ansible'
   - collections/ansible_collections/calaviaorg/setup/playbooks/
 skip_list:
   - fqcn[keyword]
