@@ -17,6 +17,6 @@ jobs:
       version-file: "collections/ansible_collections/calaviaorg/setup/galaxy.yml"
       fail-on-invalid-branch: true
       require-conventional-commits: true
-      no-bump-branch-pattern: "^(chore|dependabot)/.+"
+      no-bump-branch-pattern: "^chore/.+"
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
