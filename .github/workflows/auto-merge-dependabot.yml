@@ -1,0 +1,22 @@
+name: Auto-Merge Dependabot Security PRs
+
+# Uses pull_request_target: dependabot-triggered pull_request runs get a
+# read-only GITHUB_TOKEN, but enabling auto-merge needs write access.
+# SECURITY: this workflow NEVER checks out or executes PR code — it only
+# reads metadata and calls `gh pr merge --auto`. Safe under pull_request_target.
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  dependabot-automerge:
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    uses: calavia-org/workflows-lib/.github/workflows/auto-merge-dependabot.yml@v0
+    with:
+      merge-method: squash
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
