@@ -19,4 +19,7 @@ jobs:
       require-conventional-commits: true
       no-bump-branch-pattern: "^chore/.+"
     secrets:
-      github-token: ${{ secrets.GITHUB_TOKEN }}
+      # Fine-grained PAT (contents: read/write on this repo) so the auto-bump
+      # push does NOT re-trigger pull_request runs in approval-required state
+      # (GITHUB_TOKEN pushes always do). See workflows-lib pr-check-and-bump.
+      github-token: ${{ secrets.AUTO_BUMP_TOKEN }}
