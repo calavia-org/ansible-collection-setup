@@ -1,1 +1,2 @@
 PAT-gate verification: after AUTO_BUMP_TOKEN is set, auto-bump push must NOT create approval-required runs.
+probe re-trigger 20:17:23
