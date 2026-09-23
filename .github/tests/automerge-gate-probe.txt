@@ -1,0 +1,1 @@
+PROBE ONLY - auto-merge gate test. This file is not meant to merge; used to verify the actor gate skips the Auto-Merge workflow for non-dependabot PRs.
