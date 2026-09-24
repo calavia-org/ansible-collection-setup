@@ -39,6 +39,10 @@ jobs:
       notify-on-release: true
       ansible-collection-path: collections/ansible_collections/calaviaorg/setup
       ee-definition-file: execution-environment.yml
+      run-tests: true
+      integration-test-command: python -m tox --ansible -e integration-py3.12-2.20,integration-py3.12-milestone --conf tox-ansible.ini
+      tox-ini: tox-ansible.ini
+      timeout-minutes: 120
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
       package-token: ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
