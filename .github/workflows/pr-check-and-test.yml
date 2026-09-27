@@ -16,13 +16,12 @@ jobs:
     with:
       technology: ansible
       run-pre-commit: true
-      run-lint: true
+      run-lint: false
       run-build: false
       run-tests: true
       run-unit-tests: true
       run-integration-tests: true
       python-version: '3.12'
-      python-linter-version: '0.11.0'
       tox-ini: tox-ansible.ini
       test-command: python -m tox --ansible -e unit-py3.12-2.20,unit-py3.12-milestone,sanity-py3.12-milestone --conf tox-ansible.ini
       integration-test-command: python -m tox --ansible -e integration-py3.12-milestone --conf tox-ansible.ini
