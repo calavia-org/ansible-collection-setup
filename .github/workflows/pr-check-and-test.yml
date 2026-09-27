@@ -3,21 +3,6 @@ name: PR Check and Test
 on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
-    paths:
-      - collections/ansible_collections/calaviaorg/setup/playbooks/**
-      - collections/ansible_collections/calaviaorg/setup/plugins/**
-      - collections/ansible_collections/calaviaorg/setup/roles/**
-      - tests/**
-      - extensions/molecule/**
-      - galaxy.yml
-      - requirements.yml
-      - tox-ansible.ini
-      - .github/workflows/pr-check-and-test.yml
-      - .pre-commit-config.yaml
-      - pyproject.toml
-      - setup.py
-      - setup.cfg
-      - requirements.txt
 
 permissions:
   contents: read
