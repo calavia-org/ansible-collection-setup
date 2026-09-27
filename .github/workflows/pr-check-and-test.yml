@@ -6,6 +6,9 @@ on:
 
 permissions:
   contents: read
+  # Required by the report job: create check runs + comment on the PR
+  checks: write
+  pull-requests: write
 
 jobs:
   pr-check-and-test:
@@ -13,7 +16,7 @@ jobs:
     with:
       technology: ansible
       run-pre-commit: true
-      run-lint: false
+      run-lint: true
       run-build: false
       run-tests: true
       run-unit-tests: true
@@ -24,8 +27,8 @@ jobs:
       integration-test-command: python -m tox --ansible -e integration-py3.12-milestone --conf tox-ansible.ini
       fail-on-missing: false
       cache-enabled: true
-      report-enabled: false
-      comment-on-pr: false
+      report-enabled: true
+      comment-on-pr: true
       timeout-minutes: 30
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}

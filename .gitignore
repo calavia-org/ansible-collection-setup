@@ -1,6 +1,7 @@
 # Files by extenssion
 *.swp
 coverage.*
+junit-*.xml
 
 # Hidden directories
 .cache/
