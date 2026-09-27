@@ -16,7 +16,6 @@ jobs:
     with:
       technology: ansible
       run-pre-commit: true
-      run-lint: false
       run-build: false
       run-tests: true
       run-unit-tests: true
