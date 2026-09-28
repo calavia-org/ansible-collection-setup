@@ -6,28 +6,28 @@ on:
 
 permissions:
   contents: read
-  # Required by the report job: create check runs + comment on the PR
   checks: write
   pull-requests: write
 
 jobs:
   pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v0
+    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@feat/split-test-add-prerelease
     with:
       technology: ansible
       run-pre-commit: true
-      run-build: false
-      run-tests: true
+      run-build: true
       run-unit-tests: true
-      run-integration-tests: true
+      run-integration-tests: false
+      run-package: true
+      ansible-collection-path: collections/ansible_collections/calaviaorg/setup
+      prerelease-enabled: false
       python-version: '3.12'
       tox-ini: tox-ansible.ini
-      test-command: python -m tox --ansible -e unit-py3.12-2.20,unit-py3.12-milestone,sanity-py3.12-milestone --conf tox-ansible.ini
-      integration-test-command: python -m tox --ansible -e integration-py3.12-milestone --conf tox-ansible.ini
+      test-command: python -m tox --ansible -e unit-py3.12-2.20 --conf tox-ansible.ini
       fail-on-missing: false
       cache-enabled: true
       report-enabled: true
-      comment-on-pr: true
+      comment-on-pr: false
       timeout-minutes: 30
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}

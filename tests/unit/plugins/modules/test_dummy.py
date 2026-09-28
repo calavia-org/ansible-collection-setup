@@ -17,3 +17,7 @@ class AddTester(unittest.TestCase):
     def test_subtract(self):
         c = -13
         assert self.a - self.b == c
+
+    # Throwaway: deliberately failing test to verify the required Test gate.
+    def test_deliberate_failure_for_gate_verification(self):
+        assert False, "DELIBERATE FAILURE for Test check gate verification"
