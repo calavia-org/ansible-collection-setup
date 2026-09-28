@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v0
+    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@feat/split-test-add-prerelease
     with:
       technology: ansible
       run-pre-commit: true
