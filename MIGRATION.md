@@ -33,11 +33,10 @@ on:
 
 jobs:
   pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v1
+    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v0
     with:
       technology: auto
       run-pre-commit: true
-      run-lint: true
       run-build: true
       run-tests: true
       run-unit-tests: true
@@ -76,7 +75,6 @@ jobs:
 | Input | Description |
 |-------|-------------|
 | `test-command` | Override test command |
-| `lint-command` | Override lint command |
 | `build-command` | Override build command |
 | `package-command` | Override package command |
 | `publish-command` | Override publish command |
@@ -192,7 +190,7 @@ After validating the new workflow:
 ```yaml
 jobs:
   pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v1
+    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v0
     with:
       technology: python
       run-pre-commit: true
@@ -209,7 +207,7 @@ jobs:
 ```yaml
 jobs:
   pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v1
+    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v0
     with:
       technology: nodejs
       run-pre-commit: true
@@ -225,11 +223,10 @@ jobs:
 ```yaml
 jobs:
   pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v1
+    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v0
     with:
       technology: auto
       run-pre-commit: true
-      run-lint: true
       run-build: true
       run-tests: true
       fail-on-missing: false
