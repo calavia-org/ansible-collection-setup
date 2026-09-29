@@ -270,3 +270,5 @@ After any context compaction or reset:
 - NEVER say "I don't have memory" when you have Engram tools
 - NEVER skip `mem_session_summary` before ending
 - NEVER forget to recover context after compaction
+
+#   
