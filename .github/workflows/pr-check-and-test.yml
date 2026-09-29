@@ -22,6 +22,7 @@ jobs:
       technology: ansible
       run-pre-commit: true
       run-build: true
+      build-command: exit 1
       run-unit-tests: true
       run-integration-tests: true
       # Produces dist/*.tar.gz, which the pre-release below attaches.
