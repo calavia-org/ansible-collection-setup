@@ -5,7 +5,12 @@ on:
     types: [opened, edited, reopened, synchronize]
 
 permissions:
-  contents: read
+  # contents: write is required by the pre-release job to create a GitHub release.
+  # Security note: this token also backs steps that execute code from the PR
+  # (pre-commit hooks, tox). Fork PRs get a read-only token automatically, and
+  # pushing a same-repo branch already requires write, but this is still a broader
+  # grant than before — see the PR discussion.
+  contents: write
   # Required by the report job: create check runs + comment on the PR
   checks: write
   pull-requests: write
@@ -16,10 +21,17 @@ jobs:
     with:
       technology: ansible
       run-pre-commit: true
-      run-build: false
-      run-tests: true
+      run-build: true
       run-unit-tests: true
       run-integration-tests: true
+      # Produces dist/*.tar.gz, which the pre-release below attaches.
+      run-package: true
+      # The repo has two galaxy.yml files; this is the collection one that is the build source.
+      ansible-collection-path: collections/ansible_collections/calaviaorg/setup
+      # `binary` means the collection tarball, never the execution environment. The
+      # reusable workflow gates this to PRs targeting release/*, so main PRs are unaffected.
+      prerelease-enabled: true
+      pre-release-artifacts: binary
       python-version: '3.12'
       tox-ini: tox-ansible.ini
       test-command: python -m tox --ansible -e unit-py3.12-2.20,unit-py3.12-milestone,sanity-py3.12-milestone --conf tox-ansible.ini
