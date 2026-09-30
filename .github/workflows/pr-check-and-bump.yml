@@ -17,7 +17,7 @@ jobs:
       version-file: "collections/ansible_collections/calaviaorg/setup/galaxy.yml"
       fail-on-invalid-branch: true
       require-conventional-commits: true
-      no-bump-branch-pattern: "^chore/.+"
+      no-bump-branch-pattern: "^(chore|dependabot)/.+"
     secrets:
       # Fine-grained PAT (contents: read/write on this repo) so the auto-bump
       # push does NOT re-trigger pull_request runs in approval-required state
