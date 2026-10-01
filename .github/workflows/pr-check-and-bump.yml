@@ -15,9 +15,14 @@ jobs:
       allowed-branch-pattern: "^(major|feat|fix|doc|chore|dependabot)/.+"
       allowed-target-branches: "main,release/*"
       version-file: "collections/ansible_collections/calaviaorg/setup/galaxy.yml"
+      # galaxy.yml is what the release publishes, so it cannot disagree with the
+      # artifact; a tag lags behind and makes the next bump a no-op diff (#99).
+      base-version-source: "file"
       fail-on-invalid-branch: true
       require-conventional-commits: true
-      no-bump-branch-pattern: "^(chore|dependabot)/.+"
+      # `dependabot` must stay out of this pattern: merged security fixes need a
+      # patch bump or they publish a version that already exists (#99, #102).
+      no-bump-branch-pattern: "^chore/.+"
     secrets:
       # Fine-grained PAT (contents: read/write on this repo) so the auto-bump
       # push does NOT re-trigger pull_request runs in approval-required state
