@@ -38,11 +38,11 @@ Unify the `check_branch_name.yml` and `auto-bump-version.yml` workflows into a s
 ### 2.2 Workflow Structure
 
 ```
-calavia-org/bump-version-action
-├── action.yml                          # Custom composite action
-└── README.md
-
 calavia-org/workflows-lib
+├── .github/actions/
+│   └── bump-version/
+│       ├── action.yml                  # Custom composite action
+│       └── README.md
 └── .github/workflows/
     └── pr-check-and-bump.yml           # Reusable workflow (workflow_call)
 
@@ -97,7 +97,7 @@ workflow_call:
   4. **Get latest tag from base branch:** `git describe --tags --abbrev=0 origin/${{ github.base_ref }}`.
   5. **Bump version using custom action:**
      ```yaml
-      - uses: calavia-org/bump-version-action@v0
+      - uses: calavia-org/workflows-lib/.github/actions/bump-version@v0
         with:
           version-file: ${{ inputs.version-file }}
           bump-type: ${{ needs.check-pr.outputs.bump_type }}
@@ -127,7 +127,7 @@ workflow_call:
 
 ### 4.3 Bumping Action
 
-A custom **composite action** stored in `calavia-org/bump-version-action` that:
+A custom **composite action** stored in `calavia-org/workflows-lib/.github/actions/bump-version` that:
 - Takes inputs: `version-file`, `bump-type`, `current-version`
 - Auto-detects technology if `version-file: auto`
 - Reads the current version from the file
@@ -208,7 +208,7 @@ jobs:
 
 ## 8. Decisions Made
 
-1. ✅ **Version bumping tool:** Custom composite action (`calavia-org/bump-version-action@v1`) instead of inline script or third-party action.
+1. ✅ **Version bumping tool:** Custom composite action (`calavia-org/workflows-lib/.github/actions/bump-version@v0`) instead of inline script or third-party action.
 2. **Technology detection priority:** galaxy.yml → package.json → pyproject.toml → setup.py → Cargo.toml → VERSION → version.txt
 3. ✅ **Branch pattern for base branches:** Yes, validate `github.base_ref` against allowed patterns (default: `main`, `release/*`).
 4. ✅ **Bump type source:** Conventional commits, not branch names. Parse commit messages for `fix:`, `feat:`, `BREAKING CHANGE:`.
@@ -226,7 +226,7 @@ jobs:
 
 ## 10. Success Criteria
 
-- [x] `bump-version-action` custom action published to `calavia-org/bump-version-action@v0`.
+- [x] `bump-version` custom action published to `calavia-org/workflows-lib/.github/actions/bump-version@v0`.
 - [x] `workflows-lib` has a reusable `pr-check-and-bump.yml` workflow using the action.
 - [x] `workflows-lib` has a reusable `pr-check-and-test.yml` workflow.
 - [x] `workflows-lib` has a reusable `release-artifacts.yml` workflow.
