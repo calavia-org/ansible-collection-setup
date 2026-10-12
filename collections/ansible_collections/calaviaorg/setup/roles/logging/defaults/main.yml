@@ -1,0 +1,202 @@
+---
+logging_packages:
+  - rsyslog
+  - rsyslog-mysql
+  - python3-pymysql
+
+logging_user: 'syslog'
+logging_group: 'syslog'
+
+logging_service: 'rsyslog'
+logging_log_path: '/var/log/rsyslog'
+logging_log_path_mode: '0640'
+
+logging_global_config_file: '/etc/rsyslog.conf'
+logging_facilities_config_file: '/etc/rsyslog.d/50-default.conf'
+logging_config_files_mode: '0640'
+
+logging_receiver_tcp: yes
+logging_allowed_sender: '*.example.net'
+
+logging_remote_tcp:
+  enabled: yes
+  target: 'rsyslog.example.net'
+  port: 514
+
+logging_remote_mysql:
+  enabled: yes
+  template: 'StdSQLFormat'
+  server: 'mysql.example.net'
+  db: 'rsyslog'
+  uid: 'rsyslog'
+  pwd: 'rsyslog'
+
+# https://wiki.gentoo.org/wiki/Rsyslog
+logging_facilities:
+  - id: 0
+    name: 'kern'
+    description: 'kernel messages'
+    local_severities: "{{ logging_facility_severities['kern'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['kern'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['kern'].mysql_severities | default([]) }}"
+
+  - id: 1
+    name: 'user'
+    description: 'user-level messages'
+    local_severities: "{{ logging_facility_severities['user'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['user'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['user'].mysql_severities | default([]) }}"
+
+  - id: 2
+    name: 'mail'
+    description: 'mail system'
+    local_severities: "{{ logging_facility_severities['mail'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['mail'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['mail'].mysql_severities | default([]) }}"
+
+  - id: 3
+    name: 'daemon'
+    description: 'system daemons'
+    local_severities: "{{ logging_facility_severities['daemon'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['daemon'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['daemon'].mysql_severities | default([]) }}"
+
+  - id: 4
+    name: 'auth'
+    description: 'authpriv/authorization messages'
+    local_severities: "{{ logging_facility_severities['auth'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['auth'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['auth'].mysql_severities | default([]) }}"
+
+  - id: 5
+    name: 'syslog'
+    description: 'messages generated internally by syslogd'
+    local_severities: "{{ logging_facility_severities['syslog'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['syslog'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['syslog'].mysql_severities | default([]) }}"
+
+  - id: 6
+    name: 'lpr'
+    description: 'line printer subsystem'
+    local_severities: "{{ logging_facility_severities['lpr'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['lpr'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['lpr'].mysql_severities | default([]) }}"
+
+  - id: 7
+    name: 'news'
+    description: 'network news subsystem'
+    local_severities: "{{ logging_facility_severities['news'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['news'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['news'].mysql_severities | default([]) }}"
+
+  - id: 8
+    name: 'uucp'
+    description: 'UUCP subsystem'
+    local_severities: "{{ logging_facility_severities['uucp'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['uucp'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['uucp'].mysql_severities | default([]) }}"
+
+  - id: 9
+    name: 'cron'
+    description: 'clock daemon'
+    local_severities: "{{ logging_facility_severities['cron'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['cron'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['cron'].mysql_severities | default([]) }}"
+
+  - id: 10
+    name: 'authpriv'
+    description: 'security/authorization messages'
+    local_severities: "{{ logging_facility_severities['authpriv'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['authpriv'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['authpriv'].mysql_severities | default([]) }}"
+
+  - id: 11
+    name: 'ftp'
+    description: 'FTP daemon'
+    local_severities: "{{ logging_facility_severities['ftp'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['ftp'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['ftp'].mysql_severities | default([]) }}"
+
+  - id: 12
+    name: 'ntp'
+    description: 'NTP subsystem'
+    local_severities: "{{ logging_facility_severities['ntp'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['ntp'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['ntp'].mysql_severities | default([]) }}"
+
+  - id: 13
+    name: 'logaudit'
+    description: 'log audit'
+    local_severities: "{{ logging_facility_severities['logaudit'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['logaudit'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['logaudit'].mysql_severities | default([]) }}"
+
+  - id: 14
+    name: 'logalert'
+    description: 'log alert'
+    local_severities: "{{ logging_facility_severities['logalert'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['logalert'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['logalert'].mysql_severities | default([]) }}"
+
+  - id: 15
+    name: 'clock'
+    description: 'clock daemon (note 2)'
+    local_severities: "{{ logging_facility_severities['clock'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['clock'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['clock'].mysql_severities | default([]) }}"
+
+  - id: 16
+    name: 'local0'
+    description: 'local use 0 (local0)'
+    local_severities: "{{ logging_facility_severities['local0'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['local0'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['local0'].mysql_severities | default([]) }}"
+
+  - id: 17
+    name: 'local1'
+    description: 'local use 1 (local1)'
+    local_severities: "{{ logging_facility_severities['local1'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['local1'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['local1'].mysql_severities | default([]) }}"
+
+  - id: 18
+    name: 'local2'
+    description: 'local use 2 (local2)'
+    local_severities: "{{ logging_facility_severities['local2'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['local2'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['local2'].mysql_severities | default([]) }}"
+
+  - id: 19
+    name: 'local3'
+    description: 'local use 3 (local3)'
+    local_severities: "{{ logging_facility_severities['local3'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['local3'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['local3'].mysql_severities | default([]) }}"
+
+  - id: 20
+    name: 'local4'
+    description: 'local use 4 (local4)'
+    local_severities: "{{ logging_facility_severities['local4'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['local4'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['local4'].mysql_severities | default([]) }}"
+
+  - id: 21
+    name: 'local5'
+    description: 'local use 5 (local5)'
+    local_severities: "{{ logging_facility_severities['local5'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['local5'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['local5'].mysql_severities | default([]) }}"
+
+  - id: 22
+    name: 'local6'
+    description: 'local use 6 (local6)'
+    local_severities: "{{ logging_facility_severities['local6'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['local6'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['local6'].mysql_severities | default([]) }}"
+
+  - id: 23
+    name: 'local7'
+    description: 'local use 7 (local7)'
+    local_severities: "{{ logging_facility_severities['local7'].local_severities | default([]) }}"
+    tcp_severities: "{{ logging_facility_severities['local7'].tcp_severities | default([]) }}"
+    mysql_severities: "{{ logging_facility_severities['local7'].mysql_severities | default([]) }}"

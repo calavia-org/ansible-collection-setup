@@ -1,0 +1,23 @@
+galaxy_info:
+  author: 'Jorge Calavia'
+  description: 'Role to install and configure rsyslog'
+  company: 'Calavia Org'
+  license: 'GPL-3.0-only'
+  min_ansible_version: '2.19'
+
+  # https://galaxy.ansible.com/api/v1/platforms/
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+    - name: Debian
+      versions:
+        - bookworm
+
+  galaxy_tags:
+    - logging
+    - syslog
+    - rsyslog
+    - sysops
+
+dependencies: []

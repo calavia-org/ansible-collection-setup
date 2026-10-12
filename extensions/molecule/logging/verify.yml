@@ -1,0 +1,51 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: 'TEST: rsyslogd binary exists'
+      ansible.builtin.command: which rsyslogd
+      changed_when: false
+      register: rsyslog_bin
+
+    - name: 'Assert rsyslog is installed'
+      ansible.builtin.assert:
+        that: rsyslog_bin.rc == 0
+        msg: 'rsyslogd binary not found'
+
+    - name: 'TEST: log directory state'
+      ansible.builtin.stat:
+        path: /var/log/rsyslog
+      register: rsyslog_log_dir
+
+    - name: 'Assert log directory matches role defaults'
+      ansible.builtin.assert:
+        that:
+          - rsyslog_log_dir.stat.exists
+          - rsyslog_log_dir.stat.isdir
+          - rsyslog_log_dir.stat.pw_name == 'syslog'
+          - rsyslog_log_dir.stat.gr_name == 'syslog'
+
+    - name: 'TEST: global config state'
+      ansible.builtin.stat:
+        path: /etc/rsyslog.conf
+      register: rsyslog_global
+
+    - name: 'Assert global config was deployed'
+      ansible.builtin.assert:
+        that:
+          - rsyslog_global.stat.exists
+          - rsyslog_global.stat.isreg
+          - rsyslog_global.stat.mode == '0640'
+
+    - name: 'TEST: facilities config state'
+      ansible.builtin.stat:
+        path: /etc/rsyslog.d/50-default.conf
+      register: rsyslog_facilities
+
+    - name: 'Assert facilities config was deployed'
+      ansible.builtin.assert:
+        that:
+          - rsyslog_facilities.stat.exists
+          - rsyslog_facilities.stat.isreg
+          - rsyslog_facilities.stat.mode == '0640'
