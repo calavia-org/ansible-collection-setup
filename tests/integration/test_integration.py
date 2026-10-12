@@ -2,13 +2,10 @@
 
 """Tests for molecule scenarios."""
 
-from __future__ import absolute_import, division, print_function
-
 import platform
 
 import pytest
 from pytest_ansible.molecule import MoleculeScenario
-
 
 # Scenarios that should only run on specific platforms
 PLATFORM_SPECIFIC_SCENARIOS = {
