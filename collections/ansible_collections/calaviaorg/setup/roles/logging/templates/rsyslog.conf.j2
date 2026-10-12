@@ -18,7 +18,7 @@ module(load="imjournal" StateFile="imjournal.state")
 module(load="imklog" permitnonkernelfacility="on")
 
 
-{% if logging_receiver_tcp is sameas yes %}
+{% if logging_receiver_tcp | bool %}
 # provides TCP syslog reception
 module(load="imtcp")
 input(type="imtcp" port="514")
