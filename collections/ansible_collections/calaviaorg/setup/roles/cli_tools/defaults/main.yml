@@ -20,5 +20,26 @@ cli_tools_os_pkgs:
   - watch      # Execute commands periodically
   - wget
   - zoxide
+  # Folded from the retired ansible-role-base mac.yml Homebrew list. These
+  # resolve on macOS via vars/Darwin.yml (installer: brew); Debian/Ubuntu use
+  # the apt subset in vars/Debian.yml and never see this list.
+  - awscli
+  - bash
+  - bmon
+  - bpytop
+  - broot
+  - curl
+  - helm
+  - maven
+  - minikube
+  - ncdu
+  - nmap
+  - pinentry
+  - pwgen
+  - ssh-copy-id
+  - telnet
+  - terraform
+  - unzip
+  - virtualenv
 
 cli_tools_skip_install: false
