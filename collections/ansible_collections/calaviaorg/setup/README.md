@@ -12,6 +12,8 @@ Ansible collection for setting up local development environments.
 | [nvim](./roles/nvim/README.md) | Install and configure Neovim with lazy.nvim plugin management |
 | [opencode](./roles/opencode/README.md) | Install and configure OpenCode with plugin support |
 | [mise](./roles/mise/README.md) | Install and configure mise version manager with global tool defaults |
+| [cli_tools](./roles/cli_tools/README.md) | Install and configure common CLI tools for development |
+| [logging](./roles/logging/README.md) | Install and configure rsyslog |
 
 ## Requirements
 
