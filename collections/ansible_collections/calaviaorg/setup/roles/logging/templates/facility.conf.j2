@@ -1,0 +1,54 @@
+{{ ansible_managed }}
+
+{% for facility in logging_facilities %}
+{% if facility.local_severities or facility.tcp_severities or facility.mysql_severities %}
+##############################################
+## {{ facility.name }}({{ facility.id }}) facility configuration
+##############################################
+{% endif %}
+{# Check if local login is enabled based on severities severities #}
+{% if facility.local_severities %}
+## Local logging
+{{ facility.name }}.{{ facility.local_severities|join(';'+facility.name+'.') }} action(
+  type="omfile"
+  file="{{ logging_log_path }}/{{ facility.name }}.log"
+  queue.filename="{{ facility.name }}_local_queue"
+  queue.type="linkedlist"
+  queue.size="100m"
+  action.resumeRetryCount="-1"
+  queue.saveOnShutdown="on"
+)
+{% endif %}
+{% if logging_remote_tcp.enabled and facility.tcp_severities %}
+
+## Remote TCP loging
+{{ facility.name }}.{{ facility.tcp_severities|join(';'+facility.name+'.') }} action(
+  type="omfwd"
+  protocol="tcp"
+  target="{{ logging_remote_tcp.target }}"
+  port="{{ logging_remote_tcp.port }}"
+  queue.filename="{{ facility.name }}_tcp_queue"
+  queue.size="100m"
+  action.resumeRetryCount="-1"
+  queue.saveOnShutdown="on"
+)
+{% endif %}
+{# Check if remote mysql feature is enabled and if current facility uses it defining severities for this kind of remote #}
+{% if logging_remote_mysql.enabled and facility.mysql_severities %}
+
+### Remote MySQL loging
+{{ facility.name }}.{{ facility.mysql_severities|join(';'+facility.name+'.') }} action(
+  template="{{ logging_remote_mysql.template }}"
+  type="ommysql"
+  server="{{ logging_remote_mysql.server }}"
+  db="{{ logging_remote_mysql.db }}"
+  uid="{{ logging_remote_mysql.uid }}"
+  pwd="{{ logging_remote_mysql.pwd }}"
+  queue.type="linkedlist"
+  queue.filename="{{ facility.name }}_mysql_queue"
+  queue.size="100m"
+  action.resumeRetryCount="-1"
+  queue.saveOnShutdown="on"
+)
+{% endif %}
+{% endfor %}

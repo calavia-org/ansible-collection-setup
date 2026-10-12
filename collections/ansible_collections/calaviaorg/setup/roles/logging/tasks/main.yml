@@ -1,0 +1,31 @@
+---
+- name: 'Install and configure rsyslog'
+  block:
+    - name: 'Install rsyslog packages'
+      ansible.builtin.package:
+        name: "{{ logging_packages }}"
+        state: present
+      notify: 'Restart rsyslog'
+
+    - name: 'Create the rsyslog log directory'
+      ansible.builtin.file:
+        path: "{{ logging_log_path }}"
+        owner: "{{ logging_user }}"
+        group: "{{ logging_group }}"
+        mode: "{{ logging_log_path_mode }}"
+        state: directory
+      notify: 'Restart rsyslog'
+
+    - name: 'Configure rsyslog global parameters'
+      ansible.builtin.template:
+        src: 'rsyslog.conf.j2'
+        dest: "{{ logging_global_config_file }}"
+        mode: "{{ logging_config_files_mode }}"
+      notify: 'Restart rsyslog'
+
+    - name: 'Configure rsyslog facilities'
+      ansible.builtin.template:
+        src: 'facility.conf.j2'
+        dest: "{{ logging_facilities_config_file }}"
+        mode: "{{ logging_config_files_mode }}"
+      notify: 'Restart rsyslog'
