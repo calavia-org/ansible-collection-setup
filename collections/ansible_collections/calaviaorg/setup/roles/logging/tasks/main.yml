@@ -13,6 +13,19 @@
         state: present
       notify: 'Restart rsyslog'
 
+    - name: 'Ensure the rsyslog group exists'
+      ansible.builtin.group:
+        name: "{{ logging_group }}"
+        system: true
+
+    - name: 'Ensure the rsyslog user exists'
+      ansible.builtin.user:
+        name: "{{ logging_user }}"
+        group: "{{ logging_group }}"
+        system: true
+        create_home: false
+        shell: '/usr/sbin/nologin'
+
     - name: 'Create the rsyslog log directory'
       ansible.builtin.file:
         path: "{{ logging_log_path }}"
