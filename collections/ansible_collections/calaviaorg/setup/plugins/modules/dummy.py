@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import, division, print_function
 
 DOCUMENTATION = r"""
 ---
@@ -69,9 +68,7 @@ message:
     sample: 'goodbye'
 """
 
-from ansible.module_utils.basic import AnsibleModule  # noqa: E402
-
-__metaclass__ = type
+from ansible.module_utils.basic import AnsibleModule
 
 
 def run_module():
