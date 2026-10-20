@@ -14,6 +14,12 @@ permissions:
   # Required by the report job: create check runs + comment on the PR
   checks: write
   pull-requests: write
+  # The called workflow's security job (TruffleHog/Semgrep/Trivy/OSV) requests
+  # security-events: write and actions: read. When the caller declares a
+  # permissions block, GitHub validates these statically and fails the entire
+  # run at startup if they are missing — they must be granted here explicitly.
+  security-events: write
+  actions: read
 
 jobs:
   pr-check-and-test:
