@@ -11,6 +11,10 @@
     creates: '{{ ansible_facts.env.HOME }}/go/bin/engram'
   environment:
     PATH: '{{ ansible_facts.env.HOME }}/.local/share/mise/shims:{{ ansible_env.PATH }}'
+  register: opencode_engram_go_install
+  retries: 3
+  delay: 15
+  until: opencode_engram_go_install.rc | default(1) == 0
   changed_when: false
   when: ansible_os_family != 'Darwin'
 
