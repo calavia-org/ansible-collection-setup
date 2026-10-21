@@ -40,18 +40,20 @@ Ansible collection for setting up local development environments (git, tmux, GPG
 
 ### Required
 
-- **Python**: 3.12+ required
+- **mise**: Bootstraps the repo dev environment — `.mise.toml` pins Python 3.12
+  ```bash
+  mise install        # provisions python from .mise.toml
+  ```
+- **Python**: 3.12+ required (provided by mise)
 - **Ansible**: 2.19+ required
-- **Virtualenv**: Mandatory — always use a venv
+- **Virtualenv**: Mandatory — **every command in this repo runs through the venv** (tox, ansible-lint, molecule, pre-commit, ansible-galaxy). Never invoke them from system python.
   ```bash
   python3 -m venv .venv
-  source .venv/bin/activate
-  pip install -r requirements.txt
+  .venv/bin/pip install -r requirements.txt
+  source .venv/bin/activate   # or prefix commands with .venv/bin/
   ```
-- **mise**: Used for managing language versions (Go, Node.js, Python, Java)
+- **Other language versions** (managed globally by mise after ansible installs it):
   ```bash
-  # After ansible installs mise
-  mise use -g python@3.12
   mise use -g node@22
   mise use -g go@latest
   ```
@@ -102,6 +104,22 @@ yamllint -c .yamllint .
 | `tox -e <env> --ansible --conf tox-ansible.ini` | ✅ **REQUIRED** |
 | `molecule test -s <role>` | ❌ **FORBIDDEN** — bypasses collection build |
 
+### Pre-Commit Harness (MANDATORY)
+
+**No commit lands without a locally green molecule run.** Before **every** commit that touches roles, molecule scenarios, templates, `galaxy.yml`, or collection playbooks:
+
+1. **Check Docker is running** (`docker info`). If it is not, **STOP and ask the user to start Docker Desktop**. Never skip the run, never commit "to let CI test it", and never attempt to launch Docker yourself without asking.
+2. **Activate the venv** (`source .venv/bin/activate`). All commands run through the venv — tox included.
+3. **Run integration tests for the affected role(s) on at least one Python version**:
+
+   ```bash
+   tox -e integration-py3.12-milestone --ansible --conf tox-ansible.ini -- -k "<role_name>"
+   ```
+
+4. Commit only after it passes. If the run fails, fix it or ask the user — do not commit red tests.
+
+For docs-only / CI-workflow-only changes (`chore/` branches touching no role code), integration is not required, but lint still is.
+
 ### Pre-Push Checklist
 
 Before creating a PR or pushing commits, run these in order:
@@ -122,13 +140,14 @@ tox -e sanity-py3.12-milestone --ansible --conf tox-ansible.ini
 
 # 5. Test affected role(s) with tox (MANDATORY — requires Docker Desktop)
 #    Only test roles you modified. Full suite runs in CI.
+#    (Covered by the Pre-Commit Harness — must already be green before this point.)
 tox -e integration-py3.12-milestone --ansible --conf tox-ansible.ini -- -k "<role_name>"
 
 # 6. Verify collection builds
 ansible-galaxy collection build
 ```
 
-**ALL steps are mandatory.** If Docker Desktop is not running, start it before step 5.
+**ALL steps are mandatory.** If Docker Desktop is not running, ask the user to start it before step 5 (see Pre-Commit Harness).
 **Step 5**: Test only modified roles locally using `-k` filter. CI runs the full integration suite.
 
 ### Unit Tests
