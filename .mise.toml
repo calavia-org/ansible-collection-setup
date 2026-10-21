@@ -1,0 +1,5 @@
+# Dev environment bootstrap for this repository.
+# Run `mise install` to provision the toolchain, then create the venv:
+#   mise install && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+[tools]
+python = "3.12"
