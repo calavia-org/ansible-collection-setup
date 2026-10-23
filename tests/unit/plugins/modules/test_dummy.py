@@ -1,7 +1,4 @@
-from __future__ import absolute_import, division, print_function
 import unittest
-
-__metaclass__ = type
 
 
 class AddTester(unittest.TestCase):
