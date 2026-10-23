@@ -30,6 +30,11 @@ jobs:
       run-build: true
       run-unit-tests: true
       run-integration-tests: true
+      # The full OSV recursive scan is network-bound (~24 min measured on three
+      # lockfile-less requirements files), so it now runs in the nightly
+      # security-scan workflow instead. Dependency Review still gates new
+      # vulnerable dependencies on every PR.
+      scan-dependencies: false
       # Produces dist/*.tar.gz, which the pre-release below attaches.
       run-package: true
       # The repo has two galaxy.yml files; this is the collection one that is the build source.
