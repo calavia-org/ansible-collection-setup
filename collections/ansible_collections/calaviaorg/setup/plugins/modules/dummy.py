@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import, division, print_function
 
 DOCUMENTATION = r"""
 ---
@@ -69,24 +68,22 @@ message:
     sample: 'goodbye'
 """
 
-from ansible.module_utils.basic import AnsibleModule  # noqa: E402
-
-__metaclass__ = type
+from ansible.module_utils.basic import AnsibleModule
 
 
 def run_module():
     # define available arguments/parameters a user can pass to the module
-    module_args = dict(
-        name=dict(type="str", required=True),
-        new=dict(type="bool", required=False, default=False),
-    )
+    module_args = {
+        "name": {"type": "str", "required": True},
+        "new": {"type": "bool", "required": False, "default": False},
+    }
 
     # seed the result dict in the object
     # we primarily care about changed and state
     # changed is if this module effectively modified the target
     # state will include any data that you want your module to pass back
     # for consumption, for example, in a subsequent task
-    result = dict(changed=False, original_message="", message="")
+    result = {"changed": False, "original_message": "", "message": ""}
 
     # the AnsibleModule object will be our abstraction working with Ansible
     # this includes instantiation, a couple of common attr would be the
