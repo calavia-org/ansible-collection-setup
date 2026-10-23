@@ -1,0 +1,16 @@
+# Source of truth for dev/test tooling.
+#
+# requirements.txt is the generated, fully pinned lock used by CI and local
+# installs. Regenerate it after editing this file:
+#
+#   uv pip compile requirements.in --universal --python-version 3.12 -o requirements.txt
+#
+# Pinned pins keep OSV dependency scans fast (no transitive resolution) and
+# reproducible across macOS and Linux runners.
+ansible-lint>=26.10.1
+molecule>=26.10.0
+molecule-docker>=2.1.0
+pre-commit>=4.7.0
+pytest-cov>=7.1.0
+tox>=4.55.0
+tox-ansible>=26.3.0

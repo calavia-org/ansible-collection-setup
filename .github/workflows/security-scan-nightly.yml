@@ -1,11 +1,14 @@
 name: Security Scan (nightly)
 
-# The full OSV dependency scan resolves transitive dependencies against the live
-# OSV database and is network-bound, so it does not belong on the PR critical
-# path. The PR workflow keeps the fast scanners (secrets, SAST, misconfig) and
-# gates vulnerable-dependency changes with Dependency Review; this schedule runs
-# the complete scan, including dependencies, and republishes SARIF to the
-# Security tab.
+# The full OSV dependency scan does not belong on the PR critical path: the PR
+# workflow keeps the fast scanners (secrets, SAST, misconfig) and gates
+# vulnerable-dependency changes with Dependency Review; this schedule runs the
+# complete scan, including dependencies, and republishes SARIF to the Security
+# tab.
+#
+# `requirements.txt` is a fully pinned lock, so `--no-resolve` makes OSV scan the
+# exact pinned versions (direct + transitive) instead of asking deps.dev to
+# resolve loose ranges — seconds instead of ~18 minutes, with wider coverage.
 on:
   schedule:
     # 04:00 UTC daily, after the overnight dependency ecosystem refreshes.
@@ -33,5 +36,6 @@ jobs:
       scan-dependencies: true
       security-severity: HIGH
       security-sarif-upload: true
+      security-dependencies-extra-args: --no-resolve
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
