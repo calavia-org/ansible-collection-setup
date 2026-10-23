@@ -18,7 +18,7 @@ When a PR with a conventional commit title is merged to `main`:
 | Dependency | Repository | Purpose | Release Method |
 |------------|------------|---------|----------------|
 | PR validation + test | [`calavia-org/workflows-lib`](https://github.com/calavia-org/workflows-lib) | Reusable workflows for branch check, version bump, lint, test | Manual tags (`v0`) |
-| Version bump | [`calavia-org/bump-version-action`](https://github.com/calavia-org/bump-version-action) | Composite action used inside the reusable workflow | Automated on push to main via its own release workflow |
+| Version bump | [`calavia-org/workflows-lib/.github/actions/bump-version`](https://github.com/calavia-org/workflows-lib/.github/actions/bump-version) | Composite action used inside the reusable workflow | Released with `workflows-lib` tags (`v0`) |
 
 ## Versioning
 
@@ -116,5 +116,5 @@ And create a GitHub Release from the tag with the tarball attached.
 ## References
 
 - [Reusable PR Workflow](https://github.com/calavia-org/workflows-lib/blob/main/docs/pr-check-and-bump.md)
-- [Bump Version Action](https://github.com/calavia-org/bump-version-action)
+- [Bump Version Action](https://github.com/calavia-org/workflows-lib/.github/actions/bump-version)
 - [workflows-lib/RELEASE.md](https://github.com/calavia-org/workflows-lib/blob/main/RELEASE.md)
