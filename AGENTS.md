@@ -228,6 +228,7 @@ ansible-galaxy collection install calaviaorg-setup-*.tar.gz --force
 - CI runs: lint checks, tests, and auto-bumps version
 - **No-bump workflow**: PRs from `chore/` branches run checks and tests but skip the version bump (handled by the centralized `calavia-org/workflows-lib` reusable workflow)
 - Fails if branch name doesn't match `^(major|feat|fix|doc|chore)/.+`
+- The four callers in `.github/workflows/` delegate to workflows-lib's `reusable-*` workflows, pinned to an exact `vX.Y.Z` release (dependabot bumps the pin)
 
 ## Gotchas
 
@@ -239,6 +240,7 @@ ansible-galaxy collection install calaviaorg-setup-*.tar.gz --force
 - **Pre-commit hooks**: Must be installed inside the venv. The `pre-commit` package is in `requirements.txt`.
 - **Manual tools**: Docker Desktop and Ghostty are not automated by ansible — install them manually after running the playbook.
 - **Mise languages**: After ansible installs mise, run `mise install` to fetch the global language versions. Rust is not pre-configured — add it manually if needed.
+- **Caller workflow permissions**: `pr-check-and-test.yml` declares a top-level `permissions:` block, which GitHub validates statically against the called reusable workflow's job permissions (workflows-lib v0.17.0+ security-scanning jobs need `security-events: write` and `actions: read`). Removing either causes an opaque `startup_failure` before any job runs — see MIGRATION.md troubleshooting.
 
 ## Memory Protocol (Engram)
 

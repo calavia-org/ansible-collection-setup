@@ -33,7 +33,7 @@ on:
 
 jobs:
   pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v0
+    uses: calavia-org/workflows-lib/.github/workflows/reusable-ci.yml@v0
     with:
       technology: auto
       run-pre-commit: true
@@ -173,7 +173,19 @@ After validating the new workflow:
 - Check `coverage-format` matches your tool output
 - Verify coverage files are generated
 
-**5. Workflow not triggered**
+**5. Run fails with `startup_failure` before any job starts**
+- Since workflows-lib v0.17.0 the reusable CI workflow runs security scans
+  (TruffleHog, Semgrep, Trivy, OSV-Scanner) whose jobs request
+  `security-events: write` and `actions: read`. If your caller declares a
+  top-level `permissions:` block, GitHub validates those statically at startup
+  and fails the whole run when they are missing — add both to the block.
+- Since v0.17.0 the reusable workflows were renamed to a `reusable-` prefix
+  (`pr-check-and-test.yml` → `reusable-ci.yml`, `pr-check-and-bump.yml` →
+  `reusable-version-bump.yml`, `release-artifacts.yml` →
+  `reusable-release-artifacts.yml`, `auto-merge-dependabot.yml` →
+  `reusable-auto-merge-dependabot.yml`); the old paths no longer resolve at `@v0`.
+
+**6. Workflow not triggered**
 - Check `on:` triggers match your events
 - Check `paths:` filters if using path filtering
 - Ensure workflow file is in `.github/workflows/`
@@ -190,7 +202,7 @@ After validating the new workflow:
 ```yaml
 jobs:
   pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v0
+    uses: calavia-org/workflows-lib/.github/workflows/reusable-ci.yml@v0
     with:
       technology: python
       run-pre-commit: true
@@ -207,7 +219,7 @@ jobs:
 ```yaml
 jobs:
   pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v0
+    uses: calavia-org/workflows-lib/.github/workflows/reusable-ci.yml@v0
     with:
       technology: nodejs
       run-pre-commit: true
@@ -223,7 +235,7 @@ jobs:
 ```yaml
 jobs:
   pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/pr-check-and-test.yml@v0
+    uses: calavia-org/workflows-lib/.github/workflows/reusable-ci.yml@v0
     with:
       technology: auto
       run-pre-commit: true

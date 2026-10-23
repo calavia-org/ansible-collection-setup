@@ -35,10 +35,13 @@
 
     - name: 'TEST: config is valid tmux syntax'
       ansible.builtin.shell: >
-        tmux -f '{{ ansible_env.HOME }}/.tmux.conf' start-server \; list-keys \; kill-server
+        tmux -L molecule-verify -f '{{ ansible_env.HOME }}/.tmux.conf' start-server \; list-keys \; kill-server
       changed_when: false
       register: tmux_keys
       ignore_errors: true
+      retries: 3
+      delay: 2
+      until: tmux_keys.rc | default(1) == 0
 
     - name: 'Assert config loads without error'
       ansible.builtin.assert:
