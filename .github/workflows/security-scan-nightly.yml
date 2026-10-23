@@ -1,0 +1,37 @@
+name: Security Scan (nightly)
+
+# The full OSV dependency scan resolves transitive dependencies against the live
+# OSV database and is network-bound, so it does not belong on the PR critical
+# path. The PR workflow keeps the fast scanners (secrets, SAST, misconfig) and
+# gates vulnerable-dependency changes with Dependency Review; this schedule runs
+# the complete scan, including dependencies, and republishes SARIF to the
+# Security tab.
+on:
+  schedule:
+    # 04:00 UTC daily, after the overnight dependency ecosystem refreshes.
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  # contents: read is enough to check the repository out.
+  contents: read
+  # Required by the called workflow's security job to upload SARIF results.
+  security-events: write
+  # Required by the scanner actions to read workflow metadata.
+  actions: read
+
+jobs:
+  security:
+    # This workflow is published by workflows-lib in a release newer than
+    # v0.24.0, so the floating `@v0` tag is used deliberately until a tagged
+    # release contains it; pin to the explicit tag afterwards.
+    uses: calavia-org/workflows-lib/.github/workflows/reusable-security-scan.yml@v0
+    with:
+      scan-secrets: true
+      scan-sast: true
+      scan-misconfig: true
+      scan-dependencies: true
+      security-severity: HIGH
+      security-sarif-upload: true
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
