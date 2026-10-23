@@ -1,0 +1,44 @@
+---
+
+# https://wiki.gentoo.org/wiki/Rsyslog
+logging_facility_severities:
+  kern:
+  user:
+  mail:
+  daemon:
+    local_severities:
+        - '*'
+    tcp_severities:
+        - 'notice'
+  auth:
+    local_severities:
+        - '*'
+    tcp_severities:
+        - 'notice'
+  syslog:
+    local_severities:
+        - '*'
+    tcp_severities:
+        - 'notice'
+  lpr:
+  news:
+  uucp:
+  cron:
+  authpriv:
+    local_severities:
+        - '*'
+    tcp_severities:
+        - 'notice'
+  ftp:
+  ntp:
+  logaudit:
+  logalert:
+  clock:
+  local0:
+  local1:
+  local2:
+  local3:
+  local4:
+  local5:
+  local6:
+  local7:

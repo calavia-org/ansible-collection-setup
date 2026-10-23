@@ -1,0 +1,52 @@
+{{ ansible_managed }}
+
+#########################################################################
+#  /etc/rsyslog.conf    Configuration file for rsyslog.
+#                       For more information see
+#                       /usr/share/doc/rsyslog-doc/html/logging_conf.html
+#########################################################################
+
+#################
+#### MODULES ####
+#################
+
+# provides support for local system logging
+module(load="imuxsock")
+module(load="imjournal" StateFile="imjournal.state")
+
+# provides kernel logging support and enable non-kernel klog messages
+module(load="imklog" permitnonkernelfacility="on")
+
+
+{% if logging_receiver_tcp | bool %}
+# provides TCP syslog reception
+module(load="imtcp")
+input(type="imtcp" port="514")
+# https://www.rsyslog.com/doc/master/configuration/input_directives/rsconf1_allowedsender.html
+$AllowedSender TCP, {{ logging_allowed_sender }}
+{% endif %}
+
+###########################
+#### GLOBAL DIRECTIVES ####
+###########################
+
+# Enable high precision timestamps
+$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
+
+# Filter duplicated messages
+$RepeatedMsgReduction on
+
+# Set the default permissions for all log files.
+$FileOwner syslog
+$FileGroup syslog
+$FileCreateMode 0640
+$DirCreateMode 0755
+$Umask 0022
+$PrivDropToUser syslog
+$PrivDropToGroup syslog
+
+# Where to place spool and state files
+$WorkDirectory /var/spool/rsyslog
+
+# Include all config files in /etc/rsyslog.d/
+$IncludeConfig /etc/rsyslog.d/*.conf
