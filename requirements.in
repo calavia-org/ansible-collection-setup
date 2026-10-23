@@ -7,7 +7,7 @@
 #
 # Pinned pins keep OSV dependency scans fast (no transitive resolution) and
 # reproducible across macOS and Linux runners.
-ansible-lint>=26.9.0
+ansible-lint>=26.10.1
 molecule>=26.10.0
 molecule-docker>=2.1.0
 pre-commit>=4.7.0
