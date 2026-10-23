@@ -24,6 +24,9 @@ pip install -r requirements.txt
 tox -e unit-py3.12-milestone --ansible --conf tox-ansible.ini
 ```
 
+> `requirements.txt` is a generated, fully pinned lock. Edit `requirements.in` and
+> regenerate with `uv pip compile requirements.in --universal --python-version 3.12 -o requirements.txt`.
+
 ## CI / Workflows
 
 | Workflow | Purpose | Status |

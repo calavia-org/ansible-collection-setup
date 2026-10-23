@@ -236,7 +236,11 @@ ansible-galaxy collection install calaviaorg-setup-*.tar.gz --force
 - **Offline mode**: `ansible-lint` is offline-only — no Galaxy queries during linting.
 - **Playbook exclusions**: Playbooks in `collections/.../playbooks/` are excluded from ansible-lint checks.
 - **Galaxy.yml duplication**: There are two `galaxy.yml` files — root and collection. Root version is for repo metadata; collection version is the build artifact source.
-- **Requirements**: `requirements.txt` has `ansible-lint>=26.4.0` and `molecule>=26.4.0` — these are the primary test tools.
+- **Requirements**: `requirements.in` declares the dev/test tooling (`ansible-lint`, `molecule`, `tox`, …). `requirements.txt` is the generated, fully pinned lock (transitive closure) — install it as shown above. To change a dependency, edit `requirements.in` and regenerate:
+  ```bash
+  uv pip compile requirements.in --universal --python-version 3.12 -o requirements.txt
+  ```
+  The pins are not cosmetic: OSV scans exact versions without transitive resolution, which keeps the nightly dependency scan at seconds instead of ~18 minutes.
 - **Pre-commit hooks**: Must be installed inside the venv. The `pre-commit` package is in `requirements.txt`.
 - **Manual tools**: Docker Desktop and Ghostty are not automated by ansible — install them manually after running the playbook.
 - **Mise languages**: After ansible installs mise, run `mise install` to fetch the global language versions. Rust is not pre-configured — add it manually if needed.
