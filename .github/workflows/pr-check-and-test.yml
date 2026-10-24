@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/reusable-ci.yml@v0.24.0
+    uses: calavia-org/workflows-lib/.github/workflows/reusable-ci.yml@feat/molecule-parallel-scenarios
     with:
       technology: ansible
       run-pre-commit: true
