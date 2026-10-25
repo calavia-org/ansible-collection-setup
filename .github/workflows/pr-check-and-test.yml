@@ -23,13 +23,14 @@ permissions:
 
 jobs:
   pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/reusable-ci.yml@v0.24.0
+    uses: calavia-org/workflows-lib/.github/workflows/reusable-ci.yml@v0.27.1
     with:
       technology: ansible
       run-pre-commit: true
       run-build: true
       run-unit-tests: true
       run-integration-tests: true
+      molecule-scenario-filter-mode: affected
       # The full OSV recursive scan is network-bound (~24 min measured on three
       # lockfile-less requirements files), so it now runs in the nightly
       # security-scan workflow instead. Dependency Review still gates new
