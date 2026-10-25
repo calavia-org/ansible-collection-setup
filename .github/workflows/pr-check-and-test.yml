@@ -45,8 +45,8 @@ jobs:
       pre-release-artifacts: binary
       python-version: '3.12'
       tox-ini: tox-ansible.ini
-      test-command: python -m tox --ansible -e unit-py3.12-2.20,unit-py3.12-milestone,sanity-py3.12-milestone --conf tox-ansible.ini
-      integration-test-command: python -m tox --ansible -e integration-py3.12-milestone --conf tox-ansible.ini
+      test-command: python -m tox --ansible -e unit-py3.12-2.20,unit-py3.12-milestone,unit-py3.13-2.20,unit-py3.13-milestone,sanity-py3.12-milestone,sanity-py3.13-milestone --conf tox-ansible.ini
+      integration-test-command: python -m tox --ansible -e integration-py3.12-milestone,integration-py3.13-milestone --conf tox-ansible.ini
       fail-on-missing: false
       cache-enabled: true
       report-enabled: true
