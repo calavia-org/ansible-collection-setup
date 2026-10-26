@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/reusable-ci.yml@v0.27.2
+    uses: calavia-org/workflows-lib/.github/workflows/reusable-ci.yml@v0.28.0
     with:
       technology: ansible
       run-pre-commit: true
@@ -31,6 +31,9 @@ jobs:
       run-unit-tests: true
       run-integration-tests: true
       molecule-scenario-filter-mode: affected
+      integration-python-matrix: '["3.12", "3.13"]'
+      integration-ansible-matrix: '["2.20", "milestone"]'
+      integration-test-command: 'python -m tox --ansible -e integration-py${MATRIX_PYTHON_VERSION}-${MATRIX_ANSIBLE_CORE} --conf tox-ansible.ini -- -k ${MATRIX_SCENARIO}'
       # The full OSV recursive scan is network-bound (~24 min measured on three
       # lockfile-less requirements files), so it now runs in the nightly
       # security-scan workflow instead. Dependency Review still gates new
@@ -47,7 +50,6 @@ jobs:
       python-version: '3.12'
       tox-ini: tox-ansible.ini
       test-command: python -m tox --ansible -e unit-py3.12-2.20,unit-py3.12-milestone,sanity-py3.12-milestone --conf tox-ansible.ini
-      integration-test-command: python -m tox --ansible -e integration-py3.12-milestone --conf tox-ansible.ini
       fail-on-missing: false
       cache-enabled: true
       report-enabled: true
