@@ -23,14 +23,18 @@ permissions:
 
 jobs:
   pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/reusable-ci.yml@v0.27.2
+    uses: calavia-org/workflows-lib/.github/workflows/reusable-ci.yml@feat/integration-matrix-dimensions
     with:
       technology: ansible
       run-pre-commit: true
       run-build: true
       run-unit-tests: true
       run-integration-tests: true
-      molecule-scenario-filter-mode: affected
+      molecule-scenario-filter-mode: all
+      molecule-scenarios-matrix: '{"scenario": ["tmux"]}'
+      integration-python-matrix: '["3.12", "3.13"]'
+      integration-ansible-matrix: '["2.20", "milestone"]'
+      integration-test-command: 'python -m tox --ansible -e integration-py${MATRIX_PYTHON_VERSION}-${MATRIX_ANSIBLE_CORE} --conf tox-ansible.ini -- -k ${MATRIX_SCENARIO}'
       # The full OSV recursive scan is network-bound (~24 min measured on three
       # lockfile-less requirements files), so it now runs in the nightly
       # security-scan workflow instead. Dependency Review still gates new
