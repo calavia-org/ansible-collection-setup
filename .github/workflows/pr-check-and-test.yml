@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   pr-check-and-test:
-    uses: calavia-org/workflows-lib/.github/workflows/reusable-ci.yml@v0.27.1
+    uses: calavia-org/workflows-lib/.github/workflows/reusable-ci.yml@v0.27.2
     with:
       technology: ansible
       run-pre-commit: true
