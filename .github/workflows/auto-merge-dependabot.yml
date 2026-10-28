@@ -15,7 +15,7 @@ permissions:
 jobs:
   dependabot-automerge:
     if: ${{ github.actor == 'dependabot[bot]' }}
-    uses: calavia-org/workflows-lib/.github/workflows/reusable-auto-merge-dependabot.yml@v0.24.0
+    uses: calavia-org/workflows-lib/.github/workflows/reusable-auto-merge-dependabot.yml@v0.29.0
     with:
       merge-method: squash
     secrets:
