@@ -22,7 +22,7 @@ permissions:
 
 jobs:
   release:
-    uses: calavia-org/workflows-lib/.github/workflows/reusable-release-artifacts.yml@v0.24.0
+    uses: calavia-org/workflows-lib/.github/workflows/reusable-release-artifacts.yml@v0.29.0
     with:
       technology: ansible
       artifacts: binary,execution-environment
@@ -40,7 +40,11 @@ jobs:
       ansible-collection-path: collections/ansible_collections/calaviaorg/setup
       ee-definition-file: execution-environment.yml
       run-tests: true
-      integration-test-command: python -m tox --ansible -e integration-py3.12-2.20,integration-py3.12-milestone --conf tox-ansible.ini
+      test-command: python -m tox --ansible -e unit-py3.12-2.20,unit-py3.12-milestone,sanity-py3.12-milestone --conf tox-ansible.ini
+      integration-test-command: python -m tox --ansible -e integration-py${MATRIX_PYTHON_VERSION}-${MATRIX_ANSIBLE_CORE} --conf tox-ansible.ini -- -k ${MATRIX_SCENARIO}
+      integration-python-matrix: '["3.12", "3.13"]'
+      integration-ansible-matrix: '["2.20", "milestone"]'
+      molecule-scenario-filter-mode: all
       tox-ini: tox-ansible.ini
       timeout-minutes: 120
     secrets:
