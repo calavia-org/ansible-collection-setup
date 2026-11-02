@@ -10,7 +10,7 @@ on:
 
 jobs:
   pr-check-and-bump:
-    uses: calavia-org/workflows-lib/.github/workflows/reusable-version-bump.yml@v0.27.1
+    uses: calavia-org/workflows-lib/.github/workflows/reusable-version-bump.yml@v0.29.0
     with:
       allowed-branch-pattern: "^(major|feat|fix|doc|chore|dependabot)/.+"
       allowed-target-branches: "main,release/*"
