@@ -39,10 +39,8 @@ click==8.5.0
     #   black
     #   molecule
 colorama==0.4.6
-    # via
-    #   pytest
-    #   tox
-coverage==7.17.0
+    # via tox
+coverage[toml]==7.17.0
     # via pytest-cov
 cryptography==50.0.2
     # via
@@ -89,7 +87,7 @@ markupsafe==3.0.4
     # via jinja2
 mdurl==0.1.2
     # via markdown-it-py
-molecule==26.10.0
+molecule==26.11.0
     # via
     #   -r requirements.in
     #   molecule-docker
@@ -129,7 +127,7 @@ pluggy==1.7.0
     #   tox
 pre-commit==4.7.0
     # via -r requirements.in
-pycparser==3.12 ; implementation_name != 'PyPy'
+pycparser==3.12
     # via cffi
 pygments==2.21.0
     # via
@@ -157,8 +155,6 @@ python-discovery==1.6.4
     #   virtualenv
 pytokens==0.4.1
     # via black
-pywin32==312 ; sys_platform == 'win32'
-    # via docker
 pyyaml==6.0.3
     # via
     #   ansible-compat
@@ -189,7 +185,7 @@ rpds-py==2026.9.1
     #   referencing
 ruamel-yaml==0.19.1
     # via ansible-lint
-selinux==0.3.0 ; sys_platform == 'linux' or sys_platform == 'linux2'
+selinux==0.3.0
     # via molecule-docker
 subprocess-tee==0.4.2
     # via
@@ -204,10 +200,7 @@ tox==4.67.1
 tox-ansible==26.10.0
     # via -r requirements.in
 typing-extensions==4.16.0
-    # via
-    #   pytest-ansible
-    #   referencing
-    #   tox
+    # via pytest-ansible
 urllib3==2.8.0
     # via
     #   docker
